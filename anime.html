@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One Piece (anime) — AniPedia, the free otaku encyclopedia</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Linux+Libertine:ital,wght@0,400;0,700;1,400&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --wiki-bg: #101418;
+      --wiki-content-bg: #181d24;
+      --wiki-border: #303742;
+      --wiki-border-light: #242a35;
+      --wiki-text: #d8dde6;
+      --wiki-text-muted: #9aa0a6;
+      --wiki-heading: #f0f4f8;
+      --wiki-link: #6ba3ff;
+      --wiki-link-visited: #b89bff;
+      --wiki-infobox-bg: #13171f;
+      --wiki-infobox-sub: #1e2430;
+      --wiki-accent: #3366cc;
+    }
+    body {
+      background-color: var(--wiki-bg);
+      color: var(--wiki-text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14.5px;
+      line-height: 1.68;
+    }
+    .wiki-serif {
+      font-family: 'Linux Libertine', 'Noto Serif', Georgia, serif;
+    }
+    a.wiki-link {
+      color: var(--wiki-link);
+      text-decoration: none;
+    }
+    a.wiki-link:hover {
+      text-decoration: underline;
+    }
+    .mw-headline {
+      border-bottom: 1px solid var(--wiki-border);
+      padding-bottom: 4px;
+      margin-top: 1.8rem;
+      margin-bottom: 0.9rem;
+      color: var(--wiki-heading);
+      font-weight: 400;
+    }
+    .wiki-table {
+      border-collapse: collapse;
+      width: 100%;
+      border: 1px solid var(--wiki-border);
+    }
+    .wiki-table th, .wiki-table td {
+      border: 1px solid var(--wiki-border);
+      padding: 8px 12px;
+      vertical-align: top;
+    }
+    .wiki-table th {
+      background-color: #1a202c;
+      font-weight: 600;
+      text-align: left;
+    }
+    .wiki-table tr:nth-child(even) td {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+    .infobox {
+      border: 1px solid var(--wiki-border);
+      background-color: var(--wiki-infobox-bg);
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    .infobox-header {
+      background-color: var(--wiki-infobox-sub);
+      color: #fff;
+      font-weight: 600;
+      text-align: center;
+      padding: 6px;
+    }
+    .toc-item.active {
+      color: var(--wiki-link);
+      font-weight: 600;
+      border-left: 2px solid var(--wiki-link);
+      padding-left: 8px;
+    }
+    .badge-episode {
+      font-family: monospace;
+      background-color: #1e2634;
+      border: 1px solid #334155;
+      color: #93c5fd;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #2b3342;
+      border-radius: 3px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  </style>
+</head>
+<body class="selection:bg-[#3366cc] selection:text-white flex flex-col min-h-screen">
+
+  <header class="sticky top-0 z-40 bg-[#12161d] border-b border-[#2b3342] text-sm">
+    <div class="max-w-[1720px] mx-auto px-3 sm:px-5 h-14 flex items-center justify-between gap-3">
+      
+      <div class="flex items-center gap-3">
+        <button id="sidebarToggleBtn" onclick="toggleSidebar()" class="p-2 text-slate-300 hover:bg-[#1f2633] rounded transition-colors" title="Toggle Navigation Sidebar">
+          <i class="fa-solid fa-bars text-base"></i>
+        </button>
+        <a href="index.html" class="flex items-center gap-2.5 group">
+          <div class="w-8 h-8 rounded-full border border-slate-700 overflow-hidden bg-[#161c26] flex items-center justify-center flex-shrink-0">
+            <img src="favicon.png" alt="AniPedia" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/1e2633/d8dde6?text=AP';">
+          </div>
+          <div class="flex flex-col">
+            <span class="wiki-serif font-bold text-lg tracking-wide text-white group-hover:text-[#6ba3ff] transition-colors leading-none">ANIPEDIA</span>
+            <span class="text-[9.5px] text-slate-400 font-sans tracking-tight">The Free Otaku Encyclopedia</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="flex-1 max-w-xl mx-2">
+        <div class="relative flex items-center">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <i class="fa-solid fa-magnifying-glass text-xs"></i>
+          </div>
+          <input 
+            type="text" 
+            id="globalWikiSearch"
+            placeholder="Search AniPedia anime database (e.g. One Piece, Attack on Titan)..." 
+            class="w-full bg-[#181f2a] border border-[#303a4b] text-xs text-slate-100 placeholder-slate-400 rounded pl-9 pr-16 py-1.5 focus:outline-none focus:border-[#6ba3ff] focus:ring-1 focus:ring-[#6ba3ff] transition-all"
+            oninput="handleSearch(this.value)"
+            autocomplete="off"
+          />
+          <kbd class="hidden sm:inline-block absolute right-2 text-[10px] bg-[#222a38] text-slate-400 border border-slate-700 px-1.5 py-0.5 rounded font-mono">Ctrl+K</kbd>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="flex bg-[#181f2a] p-0.5 rounded border border-[#2b3342] text-xs">
+          <button id="viewArticleBtn" onclick="switchMainView('article')" class="px-2.5 py-1 rounded bg-[#3366cc] text-white font-medium transition-colors">Article</button>
+          <button id="viewDirectoryBtn" onclick="switchMainView('directory')" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition-colors">Browse Index</button>
+        </div>
+        <div class="h-5 w-px bg-slate-800 mx-1 hidden md:block"></div>
+        <a href="index.html" class="hidden md:flex items-center gap-1.5 text-xs text-slate-300 hover:text-[#6ba3ff] px-2 py-1.5 rounded hover:bg-[#1a212c] transition-colors">
+          <i class="fa-solid fa-house text-slate-400"></i>
+          <span>Portal</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <div class="max-w-[1720px] w-full mx-auto flex-1 flex px-2 sm:px-4 py-4 gap-6">
+
+    <aside id="wikiSidebar" class="w-64 flex-shrink-0 hidden lg:block sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto custom-scroll pr-2 text-xs">
+      
+      <div class="pb-4 mb-4 border-b border-[#2b3342] space-y-1">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-2 py-1">Main Sections</div>
+        <a href="javascript:void(0)" onclick="loadAnimeArticle('onepiece')" class="flex items-center justify-between px-2 py-1.5 rounded text-white bg-[#1e2533] font-semibold">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-film text-[#6ba3ff]"></i> One Piece (anime)</span>
+          <span class="text-[10px] text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-1 rounded">Active</span>
+        </a>
+        <a href="javascript:void(0)" onclick="loadAnimeArticle('cowboybebop')" class="flex items-center justify-between px-2 py-1.5 rounded text-slate-300 hover:bg-[#1c222e] hover:text-white transition-colors">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-record-vinyl text-purple-400"></i> Cowboy Bebop</span>
+          <span class="text-[10px] text-slate-400">26 eps</span>
+        </a>
+        <a href="javascript:void(0)" onclick="loadAnimeArticle('fma')" class="flex items-center justify-between px-2 py-1.5 rounded text-slate-300 hover:bg-[#1c222e] hover:text-white transition-colors">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-circle-nodes text-amber-400"></i> Fullmetal Alchemist: B</span>
+          <span class="text-[10px] text-slate-400">64 eps</span>
+        </a>
+        <a href="javascript:void(0)" onclick="loadAnimeArticle('evangelion')" class="flex items-center justify-between px-2 py-1.5 rounded text-slate-300 hover:bg-[#1c222e] hover:text-white transition-colors">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-cross text-red-400"></i> Evangelion</span>
+          <span class="text-[10px] text-slate-400">26 eps</span>
+        </a>
+      </div>
+
+      <div class="space-y-1">
+        <div class="flex items-center justify-between px-2 py-1">
+          <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Contents</span>
+          <button onclick="toggleTocContent()" class="text-[10px] text-[#6ba3ff] hover:underline" id="tocHideBtn">hide</button>
+        </div>
+
+        <nav id="tocNav" class="space-y-0.5 border-l border-[#2e3747] ml-2 pl-2 text-slate-400">
+          <a href="#overview" class="toc-item block py-1 hover:text-white transition-colors active">(Top / Overview)</a>
+          <a href="#plot-synopsis" class="toc-item block py-1 hover:text-white transition-colors">1 Plot synopsis & setting</a>
+          <a href="#production" class="toc-item block py-1 hover:text-white transition-colors">2 Production & development</a>
+          <div class="pl-2 space-y-0.5 border-l border-slate-800 ml-1">
+            <a href="#production-animation" class="toc-item block py-0.5 text-[11.5px] hover:text-white transition-colors">2.1 Animation techniques</a>
+            <a href="#production-music" class="toc-item block py-0.5 text-[11.5px] hover:text-white transition-colors">2.2 Music & sound design</a>
+          </div>
+          <a href="#characters" class="toc-item block py-1 hover:text-white transition-colors">3 Characters & cast</a>
+          <a href="#episodes" class="toc-item block py-1 hover:text-white transition-colors">4 Episode guide & recaps</a>
+          <a href="#themes" class="toc-item block py-1 hover:text-white transition-colors">5 Themes & cultural impact</a>
+          <a href="#media-releases" class="toc-item block py-1 hover:text-white transition-colors">6 Media releases & distribution</a>
+          <a href="#reception" class="toc-item block py-1 hover:text-white transition-colors">7 Reception & accolades</a>
+          <a href="#references" class="toc-item block py-1 hover:text-white transition-colors">8 References & external links</a>
+        </nav>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-[#2b3342] text-slate-400 px-2 space-y-1.5">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Otaku Repositories</div>
+        <a href="index.html" class="block hover:text-[#6ba3ff]">AniPedia Portal</a>
+        <a href="javascript:void(0)" onclick="openActionNotice('Manga index')" class="block hover:text-[#6ba3ff]">Manga Source</a>
+        <a href="javascript:void(0)" onclick="openActionNotice('Seiyuu registry')" class="block hover:text-[#6ba3ff]">Voice Actor Vault</a>
+        <a href="javascript:void(0)" onclick="openActionNotice('Animation house lineage')" class="block hover:text-[#6ba3ff]">StudioGraph</a>
+      </div>
+
+    </aside>
+
+    <main class="flex-1 min-w-0">
+
+      <div id="directoryView" class="hidden bg-[#141920] border border-[#2e3748] rounded p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-6 border-b border-[#2e3748] gap-3">
+          <div>
+            <h1 class="text-2xl font-normal text-white wiki-serif">Category: Television Anime Series</h1>
+            <p class="text-xs text-slate-400 mt-1">Showing hand-curated anime productions with scene-by-scene logs and cast matrices.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input 
+              type="text" 
+              id="directoryFilterInput" 
+              placeholder="Filter listed series..." 
+              class="bg-[#1c232f] border border-slate-700 rounded text-xs px-3 py-1.5 text-white focus:outline-none focus:border-[#6ba3ff]"
+              oninput="filterDirectory(this.value)"
+            />
+          </div>
+        </div>
+
+        <div id="directoryGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div class="anime-card bg-[#181f2a] border border-[#2e3748] rounded p-4 hover:border-[#6ba3ff] transition-all cursor-pointer" onclick="loadAnimeArticle('onepiece')">
+            <div class="flex gap-3">
+              <img src="favicon.png" class="w-16 h-20 object-cover rounded bg-[#101418] border border-slate-700 flex-shrink-0" onerror="this.src='https://placehold.co/100x140/1a212e/d8dde6?text=OP';">
+              <div>
+                <div class="text-white font-semibold text-base hover:underline">One Piece</div>
+                <div class="text-[11px] text-slate-400">Toei Animation • 1999–Present</div>
+                <div class="text-xs text-slate-300 mt-1.5 line-clamp-2">Monkey D. Luffy embarks on the Grand Line with the Straw Hat Pirates in search of the supreme treasure.</div>
+                <div class="mt-2 flex gap-1.5">
+                  <span class="text-[10px] bg-blue-950/70 border border-blue-800 text-blue-300 px-1.5 py-0.5 rounded">1,100+ episodes logged</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="anime-card bg-[#181f2a] border border-[#2e3748] rounded p-4 hover:border-[#6ba3ff] transition-all cursor-pointer" onclick="loadAnimeArticle('cowboybebop')">
+            <div class="flex gap-3">
+              <div class="w-16 h-20 rounded bg-[#201d2e] border border-purple-900/50 flex items-center justify-center text-purple-300 font-bold text-xs flex-shrink-0">BEBOP</div>
+              <div>
+                <div class="text-white font-semibold text-base hover:underline">Cowboy Bebop</div>
+                <div class="text-[11px] text-slate-400">Sunrise • 1998</div>
+                <div class="text-xs text-slate-300 mt-1.5 line-clamp-2">Bounty hunters aboard the spaceship Bebop traverse the solar system confronting lingering pasts.</div>
+                <div class="mt-2 flex gap-1.5">
+                  <span class="text-[10px] bg-purple-950/70 border border-purple-800 text-purple-300 px-1.5 py-0.5 rounded">26 episodes logged</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="anime-card bg-[#181f2a] border border-[#2e3748] rounded p-4 hover:border-[#6ba3ff] transition-all cursor-pointer" onclick="loadAnimeArticle('fma')">
+            <div class="flex gap-3">
+              <div class="w-16 h-20 rounded bg-[#2c2317] border border-amber-900/50 flex items-center justify-center text-amber-300 font-bold text-xs flex-shrink-0">FMAB</div>
+              <div>
+                <div class="text-white font-semibold text-base hover:underline">Fullmetal Alchemist: Brotherhood</div>
+                <div class="text-[11px] text-slate-400">Bones • 2009–2010</div>
+                <div class="text-xs text-slate-300 mt-1.5 line-clamp-2">Two alchemist brothers seek the Philosopher's Stone after a disastrous human transmutation attempt.</div>
+                <div class="mt-2 flex gap-1.5">
+                  <span class="text-[10px] bg-amber-950/70 border border-amber-800 text-amber-300 px-1.5 py-0.5 rounded">64 episodes logged</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="anime-card bg-[#181f2a] border border-[#2e3748] rounded p-4 hover:border-[#6ba3ff] transition-all cursor-pointer" onclick="loadAnimeArticle('evangelion')">
+            <div class="flex gap-3">
+              <div class="w-16 h-20 rounded bg-[#2b181b] border border-red-900/50 flex items-center justify-center text-red-300 font-bold text-xs flex-shrink-0">EVA</div>
+              <div>
+                <div class="text-white font-semibold text-base hover:underline">Neon Genesis Evangelion</div>
+                <div class="text-[11px] text-slate-400">Gainax / Tatsunoko • 1995–1996</div>
+                <div class="text-xs text-slate-300 mt-1.5 line-clamp-2">Adolescent pilots bio-machine mecha against enigmatic Angels while navigating deep psychological traumas.</div>
+                <div class="mt-2 flex gap-1.5">
+                  <span class="text-[10px] bg-red-950/70 border border-red-800 text-red-300 px-1.5 py-0.5 rounded">26 episodes logged</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <article id="articleView" class="bg-[#141920] border border-[#2e3748] rounded p-4 sm:p-7 md:p-8">
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-[#303742] pb-2 mb-4 gap-2">
+          <div>
+            <h1 id="articleTitle" class="text-3xl sm:text-4xl font-normal text-white wiki-serif tracking-tight">One Piece (anime)</h1>
+            <div class="text-xs text-slate-400 mt-0.5">From AniPedia, the free otaku encyclopedia</div>
+          </div>
+
+          <div class="flex items-center gap-1 text-xs self-start md:self-auto border border-slate-700/80 rounded bg-[#10141a] p-1">
+            <button onclick="openActionNotice('Read View')" class="px-2.5 py-1 text-white bg-[#1f2838] rounded font-medium">Read</button>
+            <button onclick="openActionNotice('Source Editor (Manual Logs)')" class="px-2.5 py-1 text-slate-300 hover:text-white rounded hover:bg-[#1a202c]">Edit Source</button>
+            <button onclick="openActionNotice('Revision History')" class="px-2.5 py-1 text-slate-300 hover:text-white rounded hover:bg-[#1a202c]">View History</button>
+            <button onclick="toggleStar(this)" class="px-2 py-1 text-slate-400 hover:text-amber-400 rounded hover:bg-[#1a202c]" title="Watchlist">
+              <i class="fa-regular fa-star"></i>
+            </button>
+            <button onclick="openActionNotice('Tools & Export JSON')" class="px-2 py-1 text-slate-400 hover:text-white rounded hover:bg-[#1a202c]" title="Tools">
+              <i class="fa-solid fa-ellipsis"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6">
+
+          <div class="flex-1 order-2 lg:order-1 min-w-0">
+
+            <section id="overview" class="space-y-3">
+              <p>
+                <em class="font-bold text-white">One Piece</em> (Japanese: ワンピース, Hepburn: <span class="italic">Wan Pīsu</span>) is a Japanese anime television series produced by <a href="#production" class="wiki-link">Toei Animation</a> that premiered on Fuji Television on October 20, 1999. Based on the manga series of the same name written and illustrated by <a href="#references" class="wiki-link">Eiichiro Oda</a>, it follows the adventures of <a href="#characters" class="wiki-link">Monkey D. Luffy</a>, a young boy whose body gained the properties of rubber after unintentionally eating a Devil Fruit.
+              </p>
+              <p>
+                Luffy travels with his pirate crew, the Straw Hat Pirates, across the treacherous Grand Line in search of the deceased King of the Pirates Gol D. Roger's mythical treasure, known as the "One Piece", in order to become the next Pirate King. The anime has run for more than 1,100 episodes and has been broadcast worldwide, cementing its position as one of the most culturally significant and commercially successful animation franchises in history.
+              </p>
+            </section>
+
+            <section id="plot-synopsis">
+              <h2 class="mw-headline text-2xl wiki-serif flex items-center justify-between">
+                <span>1 Plot synopsis & setting</span>
+                <span class="text-xs font-sans text-slate-500 font-normal">[<a href="javascript:void(0)" onclick="openActionNotice('Edit Plot Section')" class="wiki-link">edit</a>]</span>
+              </h2>
+              <div class="space-y-3">
+                <p>
+                  The world of <span class="italic">One Piece</span> is divided by two vast oceans running perpendicular to the <span class="font-semibold text-slate-200">Red Line</span>, a colossal contiguous ring of mountainous continent, and the <span class="font-semibold text-slate-200">Grand Line</span>, a dangerous equatorial maritime route beset by volatile weather, ferocious sea monsters, and islands with erratic magnetic fields.
+                </p>
+                <p>
+                  Twenty-two years before the story begins, Gol D. Roger, universally recognized as the King of the Pirates, was executed by the World Government. Roger's dying words announced to the assembled crowd that all his accumulated wealth, reputation, and the supreme treasure known as "One Piece" had been hidden in a single location on the mysterious final island, Laugh Tale. This declaration ignited the "Great Age of Pirates" (大海賊時代, <span class="italic">Dai Kaizoku Jidai</span>), sending countless outlaws and dreamers out to sea.
+                </p>
+                <blockquote class="border-l-4 border-slate-700 pl-4 py-1.5 my-3 bg-[#11161e] text-slate-300 italic text-sm">
+                  "Inherited Will, the Swell of the Age, and the Dreams of its People. These are things that cannot be stopped. As long as people seek the answer of freedom, these will never cease to be!"
+                  <footer class="text-xs text-slate-400 not-italic mt-1">— Gol D. Roger / Eiichiro Oda</footer>
+                </blockquote>
+              </div>
+            </section>
+
+            <section id="production">
+              <h2 class="mw-headline text-2xl wiki-serif flex items-center justify-between">
+                <span>2 Production & development</span>
+                <span class="text-xs font-sans text-slate-500 font-normal">[<a href="javascript:void(0)" onclick="openActionNotice('Edit Production Section')" class="wiki-link">edit</a>]</span>
+              </h2>
+              <p>
+                Following the astronomical serialization success of the manga in Shueisha's <span class="italic">Weekly Shōnen Jump</span> starting in 1997, Toei Animation greenlit an ongoing television adaptation directed initially by Kōnosuke Uda. Production commenced in mid-1999 utilizing traditional cel animation techniques before transitioning to digital paint and compositing in episode 207 (2004).
+              </p>
+
+              <h3 id="production-animation" class="text-lg font-semibold text-white mt-4 mb-2">2.1 Animation techniques & modern sakuga shift</h3>
+              <p class="mb-3">
+                While early arcs relied on classic hand-drawn cell layers and conservative motion rates, the series underwent major aesthetic revolutions:
+              </p>
+              <ul class="list-disc list-inside space-y-1.5 pl-2 text-slate-300">
+                <li><strong class="text-white">High-Definition Transition (Episode 207):</strong> Switched from standard definition 4:3 ratio to 16:9 widescreen digital painting.</li>
+                <li><strong class="text-white">Wano Kuni Arc Modernization (Episode 892):</strong> Series director Tatsuya Nagamine and character designer Midori Matsuda refreshed the aesthetic with calligraphic line weights, dynamic digital camera tracking, and recruitment of premier international key animators (<span class="italic">sakuga</span> cuts).</li>
+                <li><strong class="text-white">Gear 5 & Rubberhose Surrealism (Episode 1071):</strong> Integrated early 1930s Fleischer Studios cartoon conventions with hyper-modern digital composite VFX.</li>
+              </ul>
+
+              <h3 id="production-music" class="text-lg font-semibold text-white mt-4 mb-2">2.2 Music & sound design</h3>
+              <p>
+                The musical score was primarily composed by Kōhei Tanaka and Shirō Hamaguchi. Tanaka created the orchestral motifs associated with the Straw Hat crew's camaraderie, battle crescendos, and character themes, most notably the legendary main title theme "We Are!" (ウィーアー!).
+              </p>
+            </section>
+
+            <section id="characters">
+              <h2 class="mw-headline text-2xl wiki-serif flex items-center justify-between">
+                <span>3 Characters & cast</span>
+                <span class="text-xs font-sans text-slate-500 font-normal">[<a href="javascript:void(0)" onclick="openActionNotice('Edit Cast Section')" class="wiki-link">edit</a>]</span>
+              </h2>
+              <p class="mb-3">
+                The series features an expansive ensemble cast tracking the Straw Hat Pirates and their allies, marine adversaries, and rival pirate crews:
+              </p>
+
+              <div class="overflow-x-auto custom-scroll">
+                <table class="wiki-table text-xs">
+                  <thead>
+                    <tr>
+                      <th class="w-1/4">Character</th>
+                      <th class="w-1/4">Role / Epithet</th>
+                      <th class="w-1/4">Japanese Seiyū</th>
+                      <th class="w-1/4">English Dub (Crunchyroll / Funimation)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="font-semibold text-white">Monkey D. Luffy</td>
+                      <td>Captain • "Straw Hat Luffy"</td>
+                      <td>Mayumi Tanaka</td>
+                      <td>Colleen Clinkenbeard</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-white">Roronoa Zoro</td>
+                      <td>Combatant / Swordsman • "Pirate Hunter"</td>
+                      <td>Kazuya Nakai</td>
+                      <td>Christopher Sabat</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-white">Nami</td>
+                      <td>Navigator • "Cat Burglar"</td>
+                      <td>Akemi Okamura</td>
+                      <td>Luci Christian</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-white">Usopp</td>
+                      <td>Sniper • "God Usopp"</td>
+                      <td>Kappei Yamaguchi</td>
+                      <td>Sonny Strait</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-white">Sanji</td>
+                      <td>Cook • "Black Leg Sanji"</td>
+                      <td>Hiroaki Hirata</td>
+                      <td>Eric Vale</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-white">Tony Tony Chopper</td>
+                      <td>Doctor • "Cotton Candy Lover"</td>
+                      <td>Ikue Ōtani</td>
+                      <td>Brina Palencia</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-white">Nico Robin</td>
+                      <td>Archaeologist • "Devil Child"</td>
+                      <td>Yuriko Yamaguchi</td>
+                      <td>Stephanie Young</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-white">Franky</td>
+                      <td>Shipwright • "Cyborg Franky"</td>
+                      <td>Kazuki Yao</td>
+                      <td>Patrick Seitz</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-white">Brook</td>
+                      <td>Musician • "Soul King"</td>
+                      <td>Chō (Yuichi Nagashima)</td>
+                      <td>Ian Sinclair</td>
+                    </tr>
+                    <tr>
+                      <td class="font-semibold text-white">Jinbe</td>
+                      <td>Helmsman • "Knight of the Sea"</td>
+                      <td>Katsuhisa Hōki</td>
+                      <td>Daniel Baugh</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <section id="episodes">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between mw-headline gap-2">
+                <h2 class="text-2xl wiki-serif text-white">4 Episode guide & recaps</h2>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-slate-400 font-sans">Manual archival logs</span>
+                  <button onclick="expandAllRecaps()" class="text-xs font-sans text-[#6ba3ff] hover:underline">Expand all</button>
+                  <span class="text-slate-600">|</span>
+                  <button onclick="collapseAllRecaps()" class="text-xs font-sans text-[#6ba3ff] hover:underline">Collapse all</button>
+                </div>
+              </div>
+
+              <p class="text-xs text-slate-300 mb-4">
+                Below are sample hand-curated chronological episode records detailing narrative beats, cold opens, and pivotal revelations. Click any episode entry to inspect the full narrative breakdown.
+              </p>
+
+              <div class="space-y-3" id="episodeContainer">
+
+                <div class="border border-[#2d3646] rounded bg-[#161c26] overflow-hidden">
+                  <button onclick="toggleRecap('ep1')" class="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-[#1b2330] transition-colors">
+                    <div class="flex items-center gap-3">
+                      <span class="badge-episode text-xs px-2 py-0.5 rounded font-bold">EP 001</span>
+                      <div>
+                        <span class="text-white font-medium text-sm">I'm Luffy! The Man Who Will Become the Pirate King!</span>
+                        <span class="text-xs text-slate-400 block sm:inline sm:ml-2">Airdate: October 20, 1999</span>
+                      </div>
+                    </div>
+                    <i id="ep1-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                  </button>
+                  <div id="ep1" class="hidden px-4 pb-4 pt-2 border-t border-[#232b38] bg-[#12161f] text-xs space-y-2">
+                    <div class="text-slate-200"><strong class="text-[#6ba3ff]">Cold Open:</strong> Alvida's pirate vessel raids a civilian cruise ship. A chore boy named Coby discovers a large wine barrel washed aboard from the sea.</div>
+                    <div class="text-slate-200"><strong class="text-[#6ba3ff]">Key Events:</strong> Luffy bursts directly out of the barrel, knocking out Alvida's crew members. He meets Coby, reveals his ambition to discover the One Piece, and explains the properties of the Gum-Gum Fruit. Luffy effortlessly repels Alvida's spiked iron club and defeats her with a Gum-Gum Pistol, encouraging Coby to pursue his dream of joining the Marines.</div>
+                    <div class="flex flex-wrap gap-2 pt-2 text-[11px]">
+                      <span class="bg-[#1f2635] text-slate-300 px-2 py-0.5 rounded border border-slate-700">Debut: Monkey D. Luffy, Coby, Alvida</span>
+                      <span class="bg-[#1f2635] text-slate-300 px-2 py-0.5 rounded border border-slate-700">Canon adaptation: Ch. 2</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border border-[#2d3646] rounded bg-[#161c26] overflow-hidden">
+                  <button onclick="toggleRecap('ep2')" class="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-[#1b2330] transition-colors">
+                    <div class="flex items-center gap-3">
+                      <span class="badge-episode text-xs px-2 py-0.5 rounded font-bold">EP 002</span>
+                      <div>
+                        <span class="text-white font-medium text-sm">The Great Swordsman Appears! Pirate Hunter Roronoa Zoro</span>
+                        <span class="text-xs text-slate-400 block sm:inline sm:ml-2">Airdate: November 17, 1999</span>
+                      </div>
+                    </div>
+                    <i id="ep2-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                  </button>
+                  <div id="ep2" class="hidden px-4 pb-4 pt-2 border-t border-[#232b38] bg-[#12161f] text-xs space-y-2">
+                    <div class="text-slate-200"><strong class="text-[#6ba3ff]">Cold Open:</strong> Luffy and Coby arrive at Shells Town, where the local marine base is commanded by the tyrannical Captain Morgan.</div>
+                    <div class="text-slate-200"><strong class="text-[#6ba3ff]">Key Events:</strong> Luffy infiltrates the marine courtyard and encounters Roronoa Zoro tied to a wooden cross post. Zoro accepted the punishment in exchange for protecting a village girl from Morgan's pet wolf. Luffy declares he will recruit Zoro as his first crewmate and breaks into Morgan's fortress to retrieve Zoro's three katanas.</div>
+                    <div class="flex flex-wrap gap-2 pt-2 text-[11px]">
+                      <span class="bg-[#1f2635] text-slate-300 px-2 py-0.5 rounded border border-slate-700">Debut: Roronoa Zoro, Helmeppo, "Axe-Hand" Morgan</span>
+                      <span class="bg-[#1f2635] text-slate-300 px-2 py-0.5 rounded border border-slate-700">Canon adaptation: Ch. 3–5</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border border-[#2d3646] rounded bg-[#161c26] overflow-hidden">
+                  <button onclick="toggleRecap('ep1015')" class="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-[#1b2330] transition-colors">
+                    <div class="flex items-center gap-3">
+                      <span class="badge-episode text-xs px-2 py-0.5 rounded font-bold">EP 1015</span>
+                      <div>
+                        <span class="text-white font-medium text-sm">Straw Hat Luffy! The Man Who Will Become the King of the Pirates!</span>
+                        <span class="text-xs text-slate-400 block sm:inline sm:ml-2">Airdate: April 24, 2022</span>
+                      </div>
+                    </div>
+                    <i id="ep1015-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                  </button>
+                  <div id="ep1015" class="hidden px-4 pb-4 pt-2 border-t border-[#232b38] bg-[#12161f] text-xs space-y-2">
+                    <div class="text-slate-200"><strong class="text-[#6ba3ff]">Cold Open:</strong> Yamato remembers their fateful encounter with Portgas D. Ace in Wano and reflects on Kozuki Oden's logbook prophecies.</div>
+                    <div class="text-slate-200"><strong class="text-[#6ba3ff]">Key Events:</strong> Directed by Megumi Ishitani. Ace accidentally divulges Luffy's secret childhood dream to Yamato, who is moved to tears recognizing Roger's exact words. In the present, Luffy strides onto the Onigashima rooftop alongside the Worst Generation, bypassing Big Mom and striking Kaido down with a cinematic Red Roc infused with Advanced Conqueror's Haki.</div>
+                    <div class="flex flex-wrap gap-2 pt-2 text-[11px]">
+                      <span class="bg-[#1f2635] text-slate-300 px-2 py-0.5 rounded border border-slate-700">Landmark: Megumi Ishitani directorial storyboard</span>
+                      <span class="bg-[#1f2635] text-slate-300 px-2 py-0.5 rounded border border-slate-700">Canon adaptation: Ch. 1000</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border border-[#2d3646] rounded bg-[#161c26] overflow-hidden">
+                  <button onclick="toggleRecap('ep1071')" class="w-full px-4 py-3 text-left flex items-center justify-between hover:bg-[#1b2330] transition-colors">
+                    <div class="flex items-center gap-3">
+                      <span class="badge-episode text-xs px-2 py-0.5 rounded font-bold">EP 1071</span>
+                      <div>
+                        <span class="text-white font-medium text-sm">Luffy's Peak – Attained! Gear 5</span>
+                        <span class="text-xs text-slate-400 block sm:inline sm:ml-2">Airdate: August 6, 2023</span>
+                      </div>
+                    </div>
+                    <i id="ep1071-icon" class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                  </button>
+                  <div id="ep1071" class="hidden px-4 pb-4 pt-2 border-t border-[#232b38] bg-[#12161f] text-xs space-y-2">
+                    <div class="text-slate-200"><strong class="text-[#6ba3ff]">Cold Open:</strong> Zunesha announces the Drums of Liberation to Momonosuke, declaring that Joy Boy has returned after 800 years.</div>
+                    <div class="text-slate-200"><strong class="text-[#6ba3ff]">Key Events:</strong> Luffy undergoes Mythical Zoan Fruit awakening (Hito Hito no Mi, Model: Nika), transforming his hair and clothes white with cartoon smoke effects. He bursts into uncontrollable laughter, grabs Kaido in dragon form from the rooftop, and demonstrates reality-bending rubber physics across the battlefield.</div>
+                    <div class="flex flex-wrap gap-2 pt-2 text-[11px]">
+                      <span class="bg-[#1f2635] text-slate-300 px-2 py-0.5 rounded border border-slate-700">Landmark: Gear 5 debut, We Are! remix</span>
+                      <span class="bg-[#1f2635] text-slate-300 px-2 py-0.5 rounded border border-slate-700">Canon adaptation: Ch. 1044</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="mt-4 p-3 bg-[#111620] border border-slate-800 rounded flex items-center justify-between">
+                <span class="text-xs text-slate-400">Archiving all 1,100+ episodes manually in single-file JSON ledger.</span>
+                <button onclick="openActionNotice('Add New Episode Record')" class="text-xs bg-[#243044] hover:bg-[#334460] text-blue-300 px-3 py-1 rounded transition-colors border border-blue-900/60">
+                  <i class="fa-solid fa-plus mr-1"></i> Log Episode
+                </button>
+              </div>
+            </section>
+
+            <section id="themes">
+              <h2 class="mw-headline text-2xl wiki-serif flex items-center justify-between">
+                <span>5 Themes & cultural impact</span>
+                <span class="text-xs font-sans text-slate-500 font-normal">[<a href="javascript:void(0)" onclick="openActionNotice('Edit Themes Section')" class="wiki-link">edit</a>]</span>
+              </h2>
+              <p>
+                The narrative fundamentally critiques totalitarian authority, racial discrimination (the Fish-Men and Lunarian struggles), censorship of historical truth (the 100-Year Void Century), and state-sanctioned propaganda via the World Government and Marine fleet. Conversely, the concept of <span class="font-semibold text-slate-200">freedom</span> is prioritized above morality or plunder: Luffy expresses zero interest in conquering territory, stating he wishes to be Pirate King strictly because the title signifies the most unrestricted person alive.
+              </p>
+            </section>
+
+            <section id="media-releases">
+              <h2 class="mw-headline text-2xl wiki-serif flex items-center justify-between">
+                <span>6 Media releases & distribution</span>
+                <span class="text-xs font-sans text-slate-500 font-normal">[<a href="javascript:void(0)" onclick="openActionNotice('Edit Releases Section')" class="wiki-link">edit</a>]</span>
+              </h2>
+              <p>
+                In North America, 4Kids Entertainment acquired distribution rights in 2004, infamously heavily censoring violence, firearms, tobacco, and Japanese cultural markers. In 2007, Funimation (now Crunchyroll) secured licensing rights, releasing unedited home video box sets and streaming the Japanese broadcast simulcast with subtitles across 190+ countries.
+              </p>
+            </section>
+
+            <section id="reception">
+              <h2 class="mw-headline text-2xl wiki-serif flex items-center justify-between">
+                <span>7 Reception & accolades</span>
+                <span class="text-xs font-sans text-slate-500 font-normal">[<a href="javascript:void(0)" onclick="openActionNotice('Edit Reception Section')" class="wiki-link">edit</a>]</span>
+              </h2>
+              <p>
+                <span class="italic">One Piece</span> has ranked consistently in the top five most-watched television animations in Japan since its premiere. International award bodies, including the Tokyo Anime Award Festival, have repeatedly recognized Toei Animation for individual sound engineering and key animation achievements.
+              </p>
+            </section>
+
+            <section id="references" class="border-t border-[#2e3748] pt-6 mt-8">
+              <h2 class="mw-headline text-2xl wiki-serif">8 References & external links</h2>
+              <ol class="list-decimal list-inside space-y-1 text-xs text-slate-400 pl-2">
+                <li>Toei Animation Official Portal: <a href="javascript:void(0)" class="wiki-link">toei-anim.co.jp/tv/onep</a></li>
+                <li>Fuji TV Official One Piece Broadcasting ledger (1999–present)</li>
+                <li>Anime News Network Encyclopedia: One Piece (TV series) entry #836</li>
+                <li>Oda, Eiichiro. SBS (Shitsumon o Boshū Suru) column series, Shueisha Volumes 1–108</li>
+              </ol>
+
+              <div class="mt-6 p-4 bg-[#10141a] border border-[#2b3342] rounded text-xs text-slate-400">
+                <span class="font-bold text-slate-200">Categories:</span>
+                <span class="inline-flex flex-wrap gap-2 ml-2">
+                  <a href="javascript:void(0)" onclick="openActionNotice('Category: 1999 Anime')" class="wiki-link">1999 anime television series</a> •
+                  <a href="javascript:void(0)" onclick="openActionNotice('Category: Toei Animation')" class="wiki-link">Toei Animation</a> •
+                  <a href="javascript:void(0)" onclick="openActionNotice('Category: Shōnen anime')" class="wiki-link">Shōnen anime</a> •
+                  <a href="javascript:void(0)" onclick="openActionNotice('Category: Pirate fiction')" class="wiki-link">Pirates in anime and manga</a>
+                </span>
+              </div>
+            </section>
+
+          </div>
+
+          <aside class="w-full lg:w-80 flex-shrink-0 order-1 lg:order-2">
+            <div class="infobox rounded overflow-hidden shadow-lg sticky top-20">
+              <div class="infobox-header text-sm tracking-wide">
+                <div class="font-bold text-white">One Piece</div>
+                <div class="text-[11px] text-slate-300 font-serif italic">ワンピース (Wan Pīsu)</div>
+              </div>
+
+              <div class="p-3 bg-[#10141b] flex flex-col items-center border-b border-[#2b3342]">
+                <div class="w-48 h-48 rounded overflow-hidden border border-slate-700 bg-[#0c1016] flex items-center justify-center relative group">
+                  <img 
+                    id="infoboxPoster"
+                    src="favicon.png" 
+                    alt="One Piece Key Visual" 
+                    class="w-full h-full object-cover"
+                    onerror="this.src='https://placehold.co/400x400/181f2a/d8dde6?text=One+Piece+Poster';"
+                  />
+                  <div class="absolute bottom-1 right-1 text-[9px] bg-black/80 px-1 rounded text-slate-400">Key Visual</div>
+                </div>
+                <div class="text-[11px] text-slate-400 mt-2 text-center">Toei Animation promotional art / character poster</div>
+              </div>
+
+              <div class="divide-y divide-[#262e3d]">
+                <div class="flex text-xs px-3 py-1.5">
+                  <span class="w-2/5 font-semibold text-slate-300">Genre</span>
+                  <span class="w-3/5 text-slate-300">Action, Adventure, Fantasy</span>
+                </div>
+                <div class="flex text-xs px-3 py-1.5 bg-[#12161f]">
+                  <span class="w-2/5 font-semibold text-slate-300">Directed by</span>
+                  <span class="w-3/5 text-slate-300">Kōnosuke Uda, Munehisa Sakai, Hiroaki Miyamoto, Tatsuya Nagamine</span>
+                </div>
+                <div class="flex text-xs px-3 py-1.5">
+                  <span class="w-2/5 font-semibold text-slate-300">Written by</span>
+                  <span class="w-3/5 text-slate-300">Junki Takegami, Hirohiko Uesaka, Shōji Yonemura, Tomohiro Nakayama</span>
+                </div>
+                <div class="flex text-xs px-3 py-1.5 bg-[#12161f]">
+                  <span class="w-2/5 font-semibold text-slate-300">Music by</span>
+                  <span class="w-3/5 text-slate-300">Kōhei Tanaka, Shirō Hamaguchi</span>
+                </div>
+                <div class="flex text-xs px-3 py-1.5">
+                  <span class="w-2/5 font-semibold text-slate-300">Studio</span>
+                  <span class="w-3/5 text-slate-300 font-semibold text-[#6ba3ff]">Toei Animation</span>
+                </div>
+                <div class="flex text-xs px-3 py-1.5 bg-[#12161f]">
+                  <span class="w-2/5 font-semibold text-slate-300">Original network</span>
+                  <span class="w-3/5 text-slate-300">Fuji Television</span>
+                </div>
+                <div class="flex text-xs px-3 py-1.5">
+                  <span class="w-2/5 font-semibold text-slate-300">Original run</span>
+                  <span class="w-3/5 text-slate-300">October 20, 1999 – present</span>
+                </div>
+                <div class="flex text-xs px-3 py-1.5 bg-[#12161f]">
+                  <span class="w-2/5 font-semibold text-slate-300">Episodes</span>
+                  <span class="w-3/5 text-slate-300 font-semibold text-emerald-400">1,100+ (list of episodes)</span>
+                </div>
+                <div class="flex text-xs px-3 py-1.5">
+                  <span class="w-2/5 font-semibold text-slate-300">English licensee</span>
+                  <span class="w-3/5 text-slate-300">Crunchyroll (formerly Funimation), Madman, Manga Ent.</span>
+                </div>
+              </div>
+
+              <div class="p-2.5 bg-[#1a212d] border-t border-[#2b3342] text-center text-[11px]">
+                <a href="index.html" class="wiki-link font-semibold">AniPedia Otaku Registry</a>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+
+      </article>
+
+    </main>
+
+  </div>
+
+  <footer class="bg-[#0b0e13] border-t border-[#242b38] py-8 text-xs text-slate-400 mt-12">
+    <div class="max-w-[1720px] mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full border border-slate-700 overflow-hidden flex-shrink-0">
+          <img src="favicon.png" alt="AniPedia" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/80x80/161b24/eaecf0?text=AP';">
+        </div>
+        <div>
+          <p class="text-slate-300">This anime encyclopedia article is released under Creative Commons Attribution-ShareAlike License.</p>
+          <p class="text-[11px] text-slate-500">AniPedia is a community-built otaku archival registry.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <a href="index.html" class="hover:text-white">Portal Main</a>
+        <a href="javascript:void(0)" onclick="openActionNotice('Privacy Policy')" class="hover:text-white">Privacy Policy</a>
+        <a href="javascript:void(0)" onclick="openActionNotice('Disclaimers')" class="hover:text-white">Disclaimers</a>
+        <a href="javascript:void(0)" onclick="openActionNotice('Mobile Web View')" class="hover:text-white">Mobile view</a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="actionModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-[#141922] border border-[#2e3748] rounded-xl max-w-sm w-full p-5 text-center space-y-3 shadow-2xl">
+      <div class="w-10 h-10 rounded-full bg-[#1e2636] text-[#6ba3ff] mx-auto flex items-center justify-center text-lg">
+        <i class="fa-solid fa-scroll"></i>
+      </div>
+      <h3 id="actionModalTitle" class="text-base font-semibold text-white wiki-serif">Action Selected</h3>
+      <p id="actionModalDesc" class="text-xs text-slate-300 leading-relaxed">
+        Interfacing with the AniPedia archival ledger...
+      </p>
+      <button onclick="closeActionNotice()" class="w-full py-1.5 bg-[#3366cc] hover:bg-[#2552a8] text-white text-xs font-medium rounded transition-colors">
+        Dismiss
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('wikiSidebar');
+      sidebar.classList.toggle('hidden');
+      if (!sidebar.classList.contains('hidden')) {
+        sidebar.classList.add('block');
+      }
+    }
+
+    function toggleTocContent() {
+      const tocNav = document.getElementById('tocNav');
+      const hideBtn = document.getElementById('tocHideBtn');
+      if (tocNav.classList.contains('hidden')) {
+        tocNav.classList.remove('hidden');
+        hideBtn.textContent = 'hide';
+      } else {
+        tocNav.classList.add('hidden');
+        hideBtn.textContent = 'show';
+      }
+    }
+
+    function toggleRecap(id) {
+      const content = document.getElementById(id);
+      const icon = document.getElementById(id + '-icon');
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        if (icon) icon.style.transform = 'rotate(180deg)';
+      } else {
+        content.classList.add('hidden');
+        if (icon) icon.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    function expandAllRecaps() {
+      ['ep1', 'ep2', 'ep1015', 'ep1071'].forEach(id => {
+        const el = document.getElementById(id);
+        const icon = document.getElementById(id + '-icon');
+        if (el) el.classList.remove('hidden');
+        if (icon) icon.style.transform = 'rotate(180deg)';
+      });
+    }
+
+    function collapseAllRecaps() {
+      ['ep1', 'ep2', 'ep1015', 'ep1071'].forEach(id => {
+        const el = document.getElementById(id);
+        const icon = document.getElementById(id + '-icon');
+        if (el) el.classList.add('hidden');
+        if (icon) icon.style.transform = 'rotate(0deg)';
+      });
+    }
+
+    function switchMainView(view) {
+      const article = document.getElementById('articleView');
+      const directory = document.getElementById('directoryView');
+      const artBtn = document.getElementById('viewArticleBtn');
+      const dirBtn = document.getElementById('viewDirectoryBtn');
+
+      if (view === 'directory') {
+        article.classList.add('hidden');
+        directory.classList.remove('hidden');
+        dirBtn.classList.add('bg-[#3366cc]', 'text-white', 'font-medium');
+        dirBtn.classList.remove('text-slate-400');
+        artBtn.classList.remove('bg-[#3366cc]', 'text-white', 'font-medium');
+        artBtn.classList.add('text-slate-400');
+      } else {
+        directory.classList.add('hidden');
+        article.classList.remove('hidden');
+        artBtn.classList.add('bg-[#3366cc]', 'text-white', 'font-medium');
+        artBtn.classList.remove('text-slate-400');
+        dirBtn.classList.remove('bg-[#3366cc]', 'text-white', 'font-medium');
+        dirBtn.classList.add('text-slate-400');
+      }
+    }
+
+    function toggleStar(btn) {
+      const icon = btn.querySelector('i');
+      if (icon.classList.contains('fa-regular')) {
+        icon.classList.remove('fa-regular');
+        icon.classList.add('fa-solid', 'text-amber-400');
+      } else {
+        icon.classList.remove('fa-solid', 'text-amber-400');
+        icon.classList.add('fa-regular');
+      }
+    }
+
+    function openActionNotice(actionName) {
+      document.getElementById('actionModalTitle').textContent = actionName;
+      document.getElementById('actionModalDesc').textContent = "This AniPedia interface connects directly to your manual offline JSON logging repository for [" + actionName + "].";
+      const modal = document.getElementById('actionModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeActionNotice() {
+      const modal = document.getElementById('actionModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function handleSearch(query) {
+      query = query.toLowerCase().trim();
+      if (!query) return;
+
+      const titles = ['one piece', 'cowboy bebop', 'fullmetal alchemist', 'evangelion'];
+      const matched = titles.find(t => t.includes(query));
+
+      if (matched) {
+        if (matched.includes('piece')) loadAnimeArticle('onepiece');
+        else if (matched.includes('bebop')) loadAnimeArticle('cowboybebop');
+        else if (matched.includes('fullmetal')) loadAnimeArticle('fma');
+        else if (matched.includes('evangelion')) loadAnimeArticle('evangelion');
+      }
+    }
+
+    function filterDirectory(query) {
+      query = query.toLowerCase().trim();
+      const cards = document.querySelectorAll('.anime-card');
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(query)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function loadAnimeArticle(slug) {
+      switchMainView('article');
+      const titleElem = document.getElementById('articleTitle');
+
+      if (slug === 'onepiece') {
+        titleElem.textContent = "One Piece (anime)";
+      } else if (slug === 'cowboybebop') {
+        titleElem.textContent = "Cowboy Bebop";
+      } else if (slug === 'fma') {
+        titleElem.textContent = "Fullmetal Alchemist: Brotherhood";
+      } else if (slug === 'evangelion') {
+        titleElem.textContent = "Neon Genesis Evangelion";
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        document.getElementById('globalWikiSearch').focus();
+      }
+      if (e.key === 'Escape') {
+        closeActionNotice();
+      }
+    });
+  </script>
+</body>
+</html>
