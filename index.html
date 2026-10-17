@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AniPedia — The Free Otaku Encyclopedia</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +21,13 @@
       letter-spacing: 0.04em;
     }
     .wiki-node {
-      transition: color 0.15s ease, transform 0.15s ease;
+      transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .wiki-node:hover {
+      background-color: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
     }
     .wiki-node:hover .node-title {
       color: #629cf8;
@@ -37,25 +44,36 @@
       outline: 2px solid #3673e8;
       border-color: transparent;
     }
+    .sister-link {
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .sister-link:hover {
+      background-color: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
     .sister-link:hover .sister-title {
       color: #629cf8;
       text-decoration: underline;
+    }
+    .center-orb-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 820px;
+      height: 480px;
+    }
+    @media (max-width: 768px) {
+      .center-orb-wrapper {
+        height: auto;
+      }
     }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-[#3673e8] selection:text-white">
 
-  <div class="w-full flex justify-end p-4">
-    <label class="cursor-pointer text-xs text-slate-400 hover:text-slate-200 flex items-center gap-2 bg-[#141922] px-3 py-1.5 rounded border border-slate-800 transition-colors">
-      <i class="fa-solid fa-image text-slate-400 text-xs"></i>
-      <span>Change Center Image</span>
-      <input type="file" id="imageUploader" accept="image/*" class="hidden">
-    </label>
-  </div>
-
-  <main class="w-full max-w-5xl mx-auto px-4 pt-2 pb-12 flex flex-col items-center flex-grow">
+  <main class="w-full max-w-5xl mx-auto px-4 pt-8 pb-12 flex flex-col items-center flex-grow">
     
-    <header class="text-center mb-8 sm:mb-10">
+    <header class="text-center mb-6 sm:mb-8">
       <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white wiki-title">
         ANIPEDIA
       </h1>
@@ -64,81 +82,123 @@
       </p>
     </header>
 
-    <div class="w-full max-w-4xl relative flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 my-2">
-      
-      <div class="flex flex-col gap-6 w-full md:w-56 text-center md:text-right order-2 md:order-1">
-        
-        <a href="javascript:void(0)" onclick="selectCategory('Anime')" class="wiki-node group cursor-pointer block">
-          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Anime</div>
-          <div class="text-xs text-slate-400 mt-0.5">38,500+ series & films</div>
-        </a>
-
-        <a href="javascript:void(0)" onclick="selectCategory('Animation')" class="wiki-node group cursor-pointer block">
-          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Animation</div>
-          <div class="text-xs text-slate-400 mt-0.5">14,200+ indie & global works</div>
-        </a>
-
-        <a href="javascript:void(0)" onclick="selectCategory('Characters')" class="wiki-node group cursor-pointer block">
-          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Characters</div>
-          <div class="text-xs text-slate-400 mt-0.5">124,000+ profiles & arcs</div>
-        </a>
-
-        <a href="javascript:void(0)" onclick="selectCategory('Studios')" class="wiki-node group cursor-pointer block">
-          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Studios</div>
-          <div class="text-xs text-slate-400 mt-0.5">2,150+ production teams</div>
-        </a>
-
-        <a href="javascript:void(0)" onclick="selectCategory('History')" class="wiki-node group cursor-pointer block">
-          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">History</div>
-          <div class="text-xs text-slate-400 mt-0.5">1917–present archives</div>
-        </a>
-
+    <div class="center-orb-wrapper hidden md:block my-2">
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 lg:w-56 lg:h-56 rounded-full overflow-hidden border-4 border-[#1e2533] shadow-2xl bg-[#0e1219] flex items-center justify-center z-10">
+        <img 
+          id="centerVisual" 
+          src="favicon.png" 
+          alt="AniPedia Mascot" 
+          class="w-full h-full object-cover select-none"
+          onerror="this.src='https://placehold.co/1000x1000/161b26/eaecf0?text=AniPedia';"
+        />
       </div>
 
-      <div class="relative order-1 md:order-2 flex-shrink-0 flex items-center justify-center">
-        <div class="w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden border-4 border-[#1e2533] shadow-2xl relative bg-[#0e1219] flex items-center justify-center">
-          <img 
-            id="centerVisual" 
-            src="1pimage.webp" 
-            alt="AniPedia Center Mascot" 
-            class="w-full h-full object-cover select-none"
-            onerror="this.src='https://placehold.co/1000x1000/161b26/eaecf0?text=Luffy+1000x1000';"
-          />
-        </div>
-      </div>
+      <a href="javascript:void(0)" onclick="selectCategory('Anime')" class="wiki-node group cursor-pointer absolute block px-3 py-1.5 rounded-lg text-right" style="top: 14px; left: 195px; width: 175px;">
+        <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Anime</div>
+        <div class="text-[11px] text-slate-400">38,500+ series & films</div>
+      </a>
 
-      <div class="flex flex-col gap-6 w-full md:w-56 text-center md:text-left order-3">
-        
-        <a href="javascript:void(0)" onclick="selectCategory('Manga')" class="wiki-node group cursor-pointer block">
-          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Manga</div>
-          <div class="text-xs text-slate-400 mt-0.5">62,800+ sequential titles</div>
-        </a>
+      <a href="javascript:void(0)" onclick="selectCategory('Animation')" class="wiki-node group cursor-pointer absolute block px-3 py-1.5 rounded-lg text-right" style="top: 104px; left: 85px; width: 185px;">
+        <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Animation</div>
+        <div class="text-[11px] text-slate-400">14,200+ indie & global</div>
+      </a>
 
-        <a href="javascript:void(0)" onclick="selectCategory('Hentai')" class="wiki-node group cursor-pointer block">
-          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Hentai</div>
-          <div class="text-xs text-slate-400 mt-0.5">19,400+ 18+ adult archives</div>
-        </a>
+      <a href="javascript:void(0)" onclick="selectCategory('Characters')" class="wiki-node group cursor-pointer absolute block px-3 py-1.5 rounded-lg text-right" style="top: 205px; left: 55px; width: 180px;">
+        <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Characters</div>
+        <div class="text-[11px] text-slate-400">124,000+ profiles & arcs</div>
+      </a>
 
-        <a href="javascript:void(0)" onclick="selectCategory('Voice Actors')" class="wiki-node group cursor-pointer block">
-          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Voice Actors</div>
-          <div class="text-xs text-slate-400 mt-0.5">29,700+ seiyū & dub casts</div>
-        </a>
+      <a href="javascript:void(0)" onclick="selectCategory('Studios')" class="wiki-node group cursor-pointer absolute block px-3 py-1.5 rounded-lg text-right" style="top: 308px; left: 85px; width: 185px;">
+        <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Studios</div>
+        <div class="text-[11px] text-slate-400">2,150+ production teams</div>
+      </a>
 
-        <a href="javascript:void(0)" onclick="selectCategory('Websites')" class="wiki-node group cursor-pointer block">
-          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Websites</div>
-          <div class="text-xs text-slate-400 mt-0.5">Databases, forums & hubs</div>
-        </a>
+      <a href="javascript:void(0)" onclick="selectCategory('History')" class="wiki-node group cursor-pointer absolute block px-3 py-1.5 rounded-lg text-right" style="top: 400px; left: 195px; width: 175px;">
+        <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">History</div>
+        <div class="text-[11px] text-slate-400">1917–present archives</div>
+      </a>
 
-        <a href="javascript:void(0)" onclick="selectCategory('Events')" class="wiki-node group cursor-pointer block">
-          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Events</div>
-          <div class="text-xs text-slate-400 mt-0.5">Comiket, AnimeJapan & expos</div>
-        </a>
+      <a href="javascript:void(0)" onclick="selectCategory('Manga')" class="wiki-node group cursor-pointer absolute block px-3 py-1.5 rounded-lg text-left" style="top: 14px; right: 195px; width: 175px;">
+        <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Manga</div>
+        <div class="text-[11px] text-slate-400">62,800+ sequential titles</div>
+      </a>
 
-      </div>
+      <a href="javascript:void(0)" onclick="selectCategory('Hentai')" class="wiki-node group cursor-pointer absolute block px-3 py-1.5 rounded-lg text-left" style="top: 104px; right: 85px; width: 185px;">
+        <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Hentai</div>
+        <div class="text-[11px] text-slate-400">19,400+ 18+ adult archives</div>
+      </a>
 
+      <a href="javascript:void(0)" onclick="selectCategory('Voice Actors')" class="wiki-node group cursor-pointer absolute block px-3 py-1.5 rounded-lg text-left" style="top: 205px; right: 55px; width: 180px;">
+        <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Voice Actors</div>
+        <div class="text-[11px] text-slate-400">29,700+ seiyū & dub casts</div>
+      </a>
+
+      <a href="javascript:void(0)" onclick="selectCategory('Websites')" class="wiki-node group cursor-pointer absolute block px-3 py-1.5 rounded-lg text-left" style="top: 308px; right: 85px; width: 185px;">
+        <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Websites</div>
+        <div class="text-[11px] text-slate-400">Databases, forums & hubs</div>
+      </a>
+
+      <a href="javascript:void(0)" onclick="selectCategory('Events')" class="wiki-node group cursor-pointer absolute block px-3 py-1.5 rounded-lg text-left" style="top: 400px; right: 195px; width: 175px;">
+        <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Events</div>
+        <div class="text-[11px] text-slate-400">Comiket, expos & rallies</div>
+      </a>
     </div>
 
-    <div class="w-full max-w-lg mt-8 sm:mt-10">
+    <div class="flex md:hidden flex-col items-center w-full my-4">
+      <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-[#1e2533] shadow-2xl bg-[#0e1219] flex items-center justify-center mb-6">
+        <img 
+          src="favicon.png" 
+          alt="AniPedia Mascot" 
+          class="w-full h-full object-cover select-none"
+          onerror="this.src='https://placehold.co/1000x1000/161b26/eaecf0?text=AniPedia';"
+        />
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 w-full max-w-sm">
+        <a href="javascript:void(0)" onclick="selectCategory('Anime')" class="wiki-node block p-2 rounded-lg text-center">
+          <div class="node-title text-[#eaecf0] font-bold text-sm">Anime</div>
+          <div class="text-[10px] text-slate-400">38,500+ series</div>
+        </a>
+        <a href="javascript:void(0)" onclick="selectCategory('Manga')" class="wiki-node block p-2 rounded-lg text-center">
+          <div class="node-title text-[#eaecf0] font-bold text-sm">Manga</div>
+          <div class="text-[10px] text-slate-400">62,800+ titles</div>
+        </a>
+        <a href="javascript:void(0)" onclick="selectCategory('Animation')" class="wiki-node block p-2 rounded-lg text-center">
+          <div class="node-title text-[#eaecf0] font-bold text-sm">Animation</div>
+          <div class="text-[10px] text-slate-400">14,200+ indie</div>
+        </a>
+        <a href="javascript:void(0)" onclick="selectCategory('Hentai')" class="wiki-node block p-2 rounded-lg text-center">
+          <div class="node-title text-[#eaecf0] font-bold text-sm">Hentai</div>
+          <div class="text-[10px] text-slate-400">19,400+ 18+</div>
+        </a>
+        <a href="javascript:void(0)" onclick="selectCategory('Characters')" class="wiki-node block p-2 rounded-lg text-center">
+          <div class="node-title text-[#eaecf0] font-bold text-sm">Characters</div>
+          <div class="text-[10px] text-slate-400">124,000+ entries</div>
+        </a>
+        <a href="javascript:void(0)" onclick="selectCategory('Voice Actors')" class="wiki-node block p-2 rounded-lg text-center">
+          <div class="node-title text-[#eaecf0] font-bold text-sm">Voice Actors</div>
+          <div class="text-[10px] text-slate-400">29,700+ casts</div>
+        </a>
+        <a href="javascript:void(0)" onclick="selectCategory('Studios')" class="wiki-node block p-2 rounded-lg text-center">
+          <div class="node-title text-[#eaecf0] font-bold text-sm">Studios</div>
+          <div class="text-[10px] text-slate-400">2,150+ teams</div>
+        </a>
+        <a href="javascript:void(0)" onclick="selectCategory('Websites')" class="wiki-node block p-2 rounded-lg text-center">
+          <div class="node-title text-[#eaecf0] font-bold text-sm">Websites</div>
+          <div class="text-[10px] text-slate-400">Hubs & forums</div>
+        </a>
+        <a href="javascript:void(0)" onclick="selectCategory('History')" class="wiki-node block p-2 rounded-lg text-center">
+          <div class="node-title text-[#eaecf0] font-bold text-sm">History</div>
+          <div class="text-[10px] text-slate-400">1917–now</div>
+        </a>
+        <a href="javascript:void(0)" onclick="selectCategory('Events')" class="wiki-node block p-2 rounded-lg text-center">
+          <div class="node-title text-[#eaecf0] font-bold text-sm">Events</div>
+          <div class="text-[10px] text-slate-400">Expos & rallies</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="w-full max-w-lg mt-6 sm:mt-8">
       <form id="searchForm" onsubmit="executeSearch(event)" class="relative flex items-stretch h-12 w-full border border-slate-700 rounded bg-[#10141d] shadow-lg">
         <input 
           type="text" 
@@ -173,7 +233,7 @@
 
       <div class="w-full flex items-center justify-center gap-3 my-6">
         <div class="h-px bg-slate-800 flex-grow max-w-[80px]"></div>
-        <button onclick="togglePortalLanguages()" class="text-xs text-[#629cf8] hover:underline flex items-center gap-2 border border-slate-800 rounded px-3 py-1.5 bg-[#10141d]">
+        <button onclick="togglePortalLanguages()" class="text-xs text-[#629cf8] hover:underline flex items-center gap-2 border border-slate-800 rounded px-3 py-1.5 bg-[#10141d] hover:bg-[#181f2c] transition-colors">
           <i class="fa-solid fa-language text-slate-400"></i>
           <span>Read AniPedia in your language</span>
           <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
@@ -182,14 +242,14 @@
       </div>
 
       <div id="languageDrawer" class="hidden bg-[#10141d] border border-slate-800 rounded-lg p-4 text-xs text-slate-300 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center mb-6">
-        <a href="#" onclick="switchLang('English'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">English</a>
-        <a href="#" onclick="switchLang('日本語'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">日本語</a>
-        <a href="#" onclick="switchLang('Français'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">Français</a>
-        <a href="#" onclick="switchLang('Español'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">Español</a>
-        <a href="#" onclick="switchLang('Deutsch'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">Deutsch</a>
-        <a href="#" onclick="switchLang('中文'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">中文</a>
-        <a href="#" onclick="switchLang('한국어'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">한국어</a>
-        <a href="#" onclick="switchLang('Italiano'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">Italiano</a>
+        <a href="#" onclick="switchLang('English'); return false;" class="hover:text-[#629cf8] p-1.5 rounded hover:bg-slate-800">English</a>
+        <a href="#" onclick="switchLang('日本語'); return false;" class="hover:text-[#629cf8] p-1.5 rounded hover:bg-slate-800">日本語</a>
+        <a href="#" onclick="switchLang('Français'); return false;" class="hover:text-[#629cf8] p-1.5 rounded hover:bg-slate-800">Français</a>
+        <a href="#" onclick="switchLang('Español'); return false;" class="hover:text-[#629cf8] p-1.5 rounded hover:bg-slate-800">Español</a>
+        <a href="#" onclick="switchLang('Deutsch'); return false;" class="hover:text-[#629cf8] p-1.5 rounded hover:bg-slate-800">Deutsch</a>
+        <a href="#" onclick="switchLang('中文'); return false;" class="hover:text-[#629cf8] p-1.5 rounded hover:bg-slate-800">中文</a>
+        <a href="#" onclick="switchLang('한국어'); return false;" class="hover:text-[#629cf8] p-1.5 rounded hover:bg-slate-800">한국어</a>
+        <a href="#" onclick="switchLang('Italiano'); return false;" class="hover:text-[#629cf8] p-1.5 rounded hover:bg-slate-800">Italiano</a>
       </div>
 
     </div>
@@ -228,11 +288,11 @@
           </div>
         </div>
 
-        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-y-6 gap-x-4">
+        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-3">
           
-          <div class="space-y-4">
-            <a href="javascript:void(0)" onclick="openProject('AniCommons')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#629cf8]">
+          <div class="space-y-2">
+            <a href="javascript:void(0)" onclick="openProject('AniCommons')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#629cf8] flex-shrink-0">
                 <i class="fa-solid fa-photo-film"></i>
               </div>
               <div>
@@ -241,8 +301,8 @@
               </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="openProject('MangaSource')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#4ade80]">
+            <a href="javascript:void(0)" onclick="openProject('MangaSource')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#4ade80] flex-shrink-0">
                 <i class="fa-solid fa-book-open"></i>
               </div>
               <div>
@@ -251,8 +311,8 @@
               </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="openProject('AniQuote')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#f472b6]">
+            <a href="javascript:void(0)" onclick="openProject('AniQuote')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#f472b6] flex-shrink-0">
                 <i class="fa-solid fa-quote-left"></i>
               </div>
               <div>
@@ -261,8 +321,8 @@
               </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="openProject('HentaiArchive')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-pink-900/60 flex items-center justify-center text-pink-400">
+            <a href="javascript:void(0)" onclick="openProject('HentaiArchive')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-pink-900/60 flex items-center justify-center text-pink-400 flex-shrink-0">
                 <i class="fa-solid fa-shield-cat"></i>
               </div>
               <div>
@@ -272,9 +332,9 @@
             </a>
           </div>
 
-          <div class="space-y-4">
-            <a href="javascript:void(0)" onclick="openProject('SeiyuuData')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#38bdf8]">
+          <div class="space-y-2">
+            <a href="javascript:void(0)" onclick="openProject('SeiyuuData')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#38bdf8] flex-shrink-0">
                 <i class="fa-solid fa-microphone-lines"></i>
               </div>
               <div>
@@ -283,8 +343,8 @@
               </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="openProject('SakugaWiki')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#fb923c]">
+            <a href="javascript:void(0)" onclick="openProject('SakugaWiki')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#fb923c] flex-shrink-0">
                 <i class="fa-solid fa-layer-group"></i>
               </div>
               <div>
@@ -293,8 +353,8 @@
               </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="openProject('StudioGraph')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#a78bfa]">
+            <a href="javascript:void(0)" onclick="openProject('StudioGraph')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#a78bfa] flex-shrink-0">
                 <i class="fa-solid fa-building"></i>
               </div>
               <div>
@@ -303,8 +363,8 @@
               </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="openProject('WebTracker')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#2dd4bf]">
+            <a href="javascript:void(0)" onclick="openProject('WebTracker')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#2dd4bf] flex-shrink-0">
                 <i class="fa-solid fa-network-wired"></i>
               </div>
               <div>
@@ -314,9 +374,9 @@
             </a>
           </div>
 
-          <div class="space-y-4">
-            <a href="javascript:void(0)" onclick="openProject('AniTimeline')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#e879f9]">
+          <div class="space-y-2">
+            <a href="javascript:void(0)" onclick="openProject('AniTimeline')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#e879f9] flex-shrink-0">
                 <i class="fa-solid fa-timeline"></i>
               </div>
               <div>
@@ -325,8 +385,8 @@
               </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="openProject('EventDex')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#facc15]">
+            <a href="javascript:void(0)" onclick="openProject('EventDex')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#facc15] flex-shrink-0">
                 <i class="fa-solid fa-calendar-days"></i>
               </div>
               <div>
@@ -335,8 +395,8 @@
               </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="openProject('SoundtrackVault')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#f87171]">
+            <a href="javascript:void(0)" onclick="openProject('SoundtrackVault')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#f87171] flex-shrink-0">
                 <i class="fa-solid fa-music"></i>
               </div>
               <div>
@@ -345,8 +405,8 @@
               </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="openProject('MetaOtaku')" class="sister-link flex items-center gap-3">
-              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#94a3b8]">
+            <a href="javascript:void(0)" onclick="openProject('MetaOtaku')" class="sister-link flex items-center gap-3 p-2 rounded-lg">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#94a3b8] flex-shrink-0">
                 <i class="fa-solid fa-compass"></i>
               </div>
               <div>
@@ -385,17 +445,6 @@
   </div>
 
   <script>
-    document.getElementById('imageUploader').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-          document.getElementById('centerVisual').src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
     function selectCategory(categoryName) {
       document.getElementById('categorySelector').value = categoryName;
       document.getElementById('noticeTitle').textContent = categoryName + " Archive";
