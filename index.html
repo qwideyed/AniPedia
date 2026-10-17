@@ -1,1439 +1,453 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AniPedia — The Comprehensive Encyclopedia for Animation, Manga, Characters & Cast</title>
-  <!-- Tailwind CSS -->
+  <title>AniPedia — The Free Otaku Encyclopedia</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            serif: ['Cinzel', 'serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            brand: {
-              50: '#f5f3ff',
-              100: '#ede9fe',
-              500: '#8b5cf6',
-              600: '#7c3aed',
-              700: '#6d28d9',
-              dark: '#0e1117',
-              panel: '#161b26',
-              border: '#232b3b',
-              accent: '#38bdf8'
-            }
-          }
-        }
-      }
-    }
-  </script>
-
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <style>
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+    body {
+      background-color: #0b0e13;
+      color: #eaecf0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    ::-webkit-scrollbar-track {
-      background: #0e1117;
+    .wiki-title {
+      font-family: 'Noto Serif', 'Cinzel', Georgia, 'Times New Roman', serif;
+      letter-spacing: 0.04em;
     }
-    ::-webkit-scrollbar-thumb {
-      background: #283245;
-      border-radius: 4px;
+    .wiki-node {
+      transition: color 0.15s ease, transform 0.15s ease;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3b4863;
+    .wiki-node:hover .node-title {
+      color: #629cf8;
+      text-decoration: underline;
     }
-
-    /* Blur & hide styles for NSFW content */
-    .nsfw-hidden {
-      display: none !important;
+    .wiki-search-btn {
+      background-color: #3673e8;
+      transition: background-color 0.15s ease;
     }
-    .nsfw-blur {
-      filter: blur(12px) grayscale(60%);
-      pointer-events: none;
-      user-select: none;
+    .wiki-search-btn:hover {
+      background-color: #245ed0;
     }
-
-    /* Glass effect */
-    .glass-nav {
-      background: rgba(14, 17, 23, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+    .wiki-input:focus {
+      outline: 2px solid #3673e8;
+      border-color: transparent;
     }
-    .wiki-card {
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
-    }
-    .wiki-card:hover {
-      transform: translateY(-3px);
-      border-color: #4b5d80;
+    .sister-link:hover .sister-title {
+      color: #629cf8;
+      text-decoration: underline;
     }
   </style>
 </head>
-<body class="bg-[#0b0e14] text-slate-200 min-h-screen font-sans selection:bg-purple-600 selection:text-white flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between selection:bg-[#3673e8] selection:text-white">
 
-  <!-- ================= TOP NAVIGATION BAR ================= -->
-  <header class="sticky top-0 z-40 w-full border-b border-brand-border glass-nav">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-      
-      <!-- Logo & Branding -->
-      <div class="flex items-center gap-3">
-        <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="flex items-center gap-2 group">
-          <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-purple-600 via-indigo-600 to-sky-400 flex items-center justify-center shadow-lg shadow-purple-900/30 group-hover:scale-105 transition-transform">
-            <i class="fa-solid fa-book-open text-white text-lg"></i>
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-xl font-bold tracking-tight text-white font-sans">Ani<span class="text-purple-400">Pedia</span></span>
-              <span class="text-[9px] uppercase tracking-wider font-mono font-semibold px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800/60">Wiki</span>
-            </div>
-            <p class="text-[10px] text-slate-400 tracking-tight hidden sm:block">The Animation & Cast Encyclopedia</p>
-          </div>
-        </a>
-      </div>
-
-      <!-- Live Search Box with Dropdown -->
-      <div class="relative flex-1 max-w-md hidden md:block">
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-            <i class="fa-solid fa-magnifying-glass text-sm"></i>
-          </span>
-          <input 
-            type="text" 
-            id="globalSearchInput"
-            placeholder="Search series, episodes, characters, seiyū..." 
-            class="w-full pl-10 pr-20 py-2 text-sm bg-brand-panel border border-brand-border rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-            autocomplete="off"
-          >
-          <div class="absolute inset-y-0 right-0 flex items-center pr-2.5">
-            <kbd class="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono text-slate-400 bg-brand-border rounded border border-slate-700">Ctrl K</kbd>
-          </div>
-        </div>
-
-        <!-- Instant Search Results Flyout -->
-        <div id="searchDropdown" class="absolute left-0 right-0 mt-2 bg-brand-panel border border-brand-border rounded-xl shadow-2xl overflow-hidden z-50 hidden">
-          <div id="searchResultsList" class="max-h-96 overflow-y-auto divide-y divide-brand-border/60">
-            <!-- Injected by JS -->
-          </div>
-          <div class="p-2.5 bg-[#0e121a] text-center border-t border-brand-border/60">
-            <span class="text-xs text-slate-400">Press <kbd class="px-1 text-[10px] bg-slate-800 rounded">ESC</kbd> to close search</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Controls & 18+ Toggle -->
-      <div class="flex items-center gap-3">
-        <!-- NSFW Toggle Button -->
-        <div class="flex items-center gap-2 bg-brand-panel px-3 py-1.5 rounded-lg border border-brand-border" title="Enable to view adult animations, hentai & 18+ recaps">
-          <span class="text-xs font-semibold text-slate-300 hidden sm:inline flex items-center gap-1.5">
-            <i class="fa-solid fa-shield-halved text-xs text-amber-400" id="nsfwShield"></i> 18+ Vault
-          </span>
-          <button 
-            id="nsfwToggleBtn" 
-            type="button" 
-            role="switch" 
-            aria-checked="false" 
-            onclick="toggleNsfwMode()"
-            class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-slate-700 transition-colors duration-200 ease-in-out focus:outline-none"
-          >
-            <span id="nsfwThumb" class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-slate-300 shadow ring-0 transition duration-200 ease-in-out translate-x-0"></span>
-          </button>
-        </div>
-
-        <!-- Random Entry Button -->
-        <button 
-          onclick="openRandomEntry()" 
-          class="p-2 text-slate-300 hover:text-white bg-brand-panel hover:bg-brand-border border border-brand-border rounded-lg transition-colors flex items-center gap-1.5 text-xs font-medium"
-          title="Jump to a Random Article"
-        >
-          <i class="fa-solid fa-dice text-purple-400 text-sm"></i>
-          <span class="hidden lg:inline">Random</span>
-        </button>
-
-        <!-- Contributor / Draft Manual Entry Button -->
-        <button 
-          onclick="openEditorNoticeModal()" 
-          class="px-3.5 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium rounded-lg text-xs shadow-md shadow-purple-950/40 flex items-center gap-1.5 transition-all"
-        >
-          <i class="fa-solid fa-feather-pointed"></i>
-          <span class="hidden sm:inline">Log Entry</span>
-        </button>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- Mobile Search Bar -->
-  <div class="md:hidden px-4 pt-3 pb-2 bg-[#0e1117] border-b border-brand-border">
-    <div class="relative">
-      <input 
-        type="text" 
-        id="mobileSearchInput"
-        placeholder="Search AniPedia..." 
-        class="w-full pl-9 pr-4 py-2 text-sm bg-brand-panel border border-brand-border rounded-lg text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-purple-500"
-      >
-      <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-        <i class="fa-solid fa-magnifying-glass text-xs"></i>
-      </span>
-    </div>
+  <div class="w-full flex justify-end p-4">
+    <label class="cursor-pointer text-xs text-slate-400 hover:text-slate-200 flex items-center gap-2 bg-[#141922] px-3 py-1.5 rounded border border-slate-800 transition-colors">
+      <i class="fa-solid fa-image text-slate-400 text-xs"></i>
+      <span>Change Center Image</span>
+      <input type="file" id="imageUploader" accept="image/*" class="hidden">
+    </label>
   </div>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10 flex-grow">
+  <main class="w-full max-w-5xl mx-auto px-4 pt-2 pb-12 flex flex-col items-center flex-grow">
+    
+    <header class="text-center mb-8 sm:mb-10">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white wiki-title">
+        ANIPEDIA
+      </h1>
+      <p class="text-sm sm:text-base text-slate-400 italic mt-1 font-serif">
+        The Free Otaku Encyclopedia
+      </p>
+    </header>
 
-    <!-- ================= HERO / ENCYCLOPEDIC OVERVIEW ================= -->
-    <section class="relative rounded-2xl bg-gradient-to-b from-[#161c28] to-[#10141d] border border-brand-border p-6 md:p-8 overflow-hidden shadow-2xl">
-      <div class="absolute -right-20 -top-20 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-sky-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="w-full max-w-4xl relative flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 my-2">
       
-      <div class="relative z-10 max-w-3xl">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/70 border border-purple-800 text-purple-300 text-xs font-mono mb-4">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          Archival Database & Episode Chronicle Project
-        </div>
+      <div class="flex flex-col gap-6 w-full md:w-56 text-center md:text-right order-2 md:order-1">
         
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
-          The Open Archive for <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-sky-300 to-indigo-300">Animation, Cast</span> & Episode Chronicles.
-        </h1>
+        <a href="javascript:void(0)" onclick="selectCategory('Anime')" class="wiki-node group cursor-pointer block">
+          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Anime</div>
+          <div class="text-xs text-slate-400 mt-0.5">38,500+ series & films</div>
+        </a>
+
+        <a href="javascript:void(0)" onclick="selectCategory('Animation')" class="wiki-node group cursor-pointer block">
+          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Animation</div>
+          <div class="text-xs text-slate-400 mt-0.5">14,200+ indie & global works</div>
+        </a>
+
+        <a href="javascript:void(0)" onclick="selectCategory('Characters')" class="wiki-node group cursor-pointer block">
+          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Characters</div>
+          <div class="text-xs text-slate-400 mt-0.5">124,000+ profiles & arcs</div>
+        </a>
+
+        <a href="javascript:void(0)" onclick="selectCategory('Studios')" class="wiki-node group cursor-pointer block">
+          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Studios</div>
+          <div class="text-xs text-slate-400 mt-0.5">2,150+ production teams</div>
+        </a>
+
+        <a href="javascript:void(0)" onclick="selectCategory('History')" class="wiki-node group cursor-pointer block">
+          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">History</div>
+          <div class="text-xs text-slate-400 mt-0.5">1917–present archives</div>
+        </a>
+
+      </div>
+
+      <div class="relative order-1 md:order-2 flex-shrink-0 flex items-center justify-center">
+        <div class="w-56 h-56 sm:w-64 sm:h-64 lg:w-72 lg:h-72 rounded-full overflow-hidden border-4 border-[#1e2533] shadow-2xl relative bg-[#0e1219] flex items-center justify-center">
+          <img 
+            id="centerVisual" 
+            src="1pimage.webp" 
+            alt="AniPedia Center Mascot" 
+            class="w-full h-full object-cover select-none"
+            onerror="this.src='https://placehold.co/1000x1000/161b26/eaecf0?text=Luffy+1000x1000';"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-6 w-full md:w-56 text-center md:text-left order-3">
         
-        <p class="mt-3 text-slate-300 text-sm sm:text-base leading-relaxed">
-          An exhaustive, hand-curated repository cataloging anime, western animation, manga, adult works, characters, multi-lingual voice actors, and comprehensive episode-by-episode narrative breakdowns.
-        </p>
+        <a href="javascript:void(0)" onclick="selectCategory('Manga')" class="wiki-node group cursor-pointer block">
+          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Manga</div>
+          <div class="text-xs text-slate-400 mt-0.5">62,800+ sequential titles</div>
+        </a>
 
-        <!-- Quick Wiki Metric Stats -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-brand-border/70">
-          <div class="p-2.5 rounded-lg bg-brand-panel/60 border border-brand-border/50">
-            <div class="text-xs text-slate-400 uppercase tracking-wider font-mono">Cataloged Works</div>
-            <div class="text-xl sm:text-2xl font-bold text-white mt-0.5">1,482</div>
-          </div>
-          <div class="p-2.5 rounded-lg bg-brand-panel/60 border border-brand-border/50">
-            <div class="text-xs text-slate-400 uppercase tracking-wider font-mono">Episode Recaps</div>
-            <div class="text-xl sm:text-2xl font-bold text-purple-400 mt-0.5">24,190</div>
-          </div>
-          <div class="p-2.5 rounded-lg bg-brand-panel/60 border border-brand-border/50">
-            <div class="text-xs text-slate-400 uppercase tracking-wider font-mono">Characters Logged</div>
-            <div class="text-xl sm:text-2xl font-bold text-sky-400 mt-0.5">38,504</div>
-          </div>
-          <div class="p-2.5 rounded-lg bg-brand-panel/60 border border-brand-border/50">
-            <div class="text-xs text-slate-400 uppercase tracking-wider font-mono">Voice Actors (VC)</div>
-            <div class="text-xl sm:text-2xl font-bold text-emerald-400 mt-0.5">9,720</div>
-          </div>
+        <a href="javascript:void(0)" onclick="selectCategory('Hentai')" class="wiki-node group cursor-pointer block">
+          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Hentai</div>
+          <div class="text-xs text-slate-400 mt-0.5">19,400+ 18+ adult archives</div>
+        </a>
+
+        <a href="javascript:void(0)" onclick="selectCategory('Voice Actors')" class="wiki-node group cursor-pointer block">
+          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Voice Actors</div>
+          <div class="text-xs text-slate-400 mt-0.5">29,700+ seiyū & dub casts</div>
+        </a>
+
+        <a href="javascript:void(0)" onclick="selectCategory('Websites')" class="wiki-node group cursor-pointer block">
+          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Websites</div>
+          <div class="text-xs text-slate-400 mt-0.5">Databases, forums & hubs</div>
+        </a>
+
+        <a href="javascript:void(0)" onclick="selectCategory('Events')" class="wiki-node group cursor-pointer block">
+          <div class="node-title text-[#eaecf0] font-bold text-base leading-snug">Events</div>
+          <div class="text-xs text-slate-400 mt-0.5">Comiket, AnimeJapan & expos</div>
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="w-full max-w-lg mt-8 sm:mt-10">
+      <form id="searchForm" onsubmit="executeSearch(event)" class="relative flex items-stretch h-12 w-full border border-slate-700 rounded bg-[#10141d] shadow-lg">
+        <input 
+          type="text" 
+          id="wikiSearchInput"
+          placeholder="Search AniPedia across 300,000+ entries..." 
+          class="wiki-input w-full bg-transparent px-4 text-sm text-slate-100 placeholder-slate-500 rounded-l focus:z-10"
+          autocomplete="off"
+        />
+
+        <div class="flex items-center border-l border-slate-700 px-2 bg-[#121721] text-xs text-slate-300">
+          <select id="categorySelector" class="bg-transparent text-slate-300 py-1 px-1 focus:outline-none cursor-pointer">
+            <option value="All" class="bg-[#121721] text-slate-200">All</option>
+            <option value="Anime" class="bg-[#121721] text-slate-200">Anime</option>
+            <option value="Manga" class="bg-[#121721] text-slate-200">Manga</option>
+            <option value="Hentai" class="bg-[#121721] text-slate-200">Hentai (18+)</option>
+            <option value="Animation" class="bg-[#121721] text-slate-200">Animation</option>
+            <option value="Voice Actors" class="bg-[#121721] text-slate-200">Voice Actors</option>
+            <option value="Characters" class="bg-[#121721] text-slate-200">Characters</option>
+            <option value="Studios" class="bg-[#121721] text-slate-200">Studios</option>
+            <option value="Websites" class="bg-[#121721] text-slate-200">Websites</option>
+            <option value="History" class="bg-[#121721] text-slate-200">History</option>
+            <option value="Events" class="bg-[#121721] text-slate-200">Events</option>
+          </select>
         </div>
 
-        <!-- Quick Filter Tags -->
-        <div class="mt-5 flex flex-wrap items-center gap-2 text-xs">
-          <span class="text-slate-400 font-mono text-[11px]">Popular Tags:</span>
-          <button onclick="filterByTag('Cyberpunk')" class="px-2.5 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors">#Cyberpunk</button>
-          <button onclick="filterByTag('Psychological')" class="px-2.5 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors">#Psychological</button>
-          <button onclick="filterByTag('Indie Animation')" class="px-2.5 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors">#IndieAnimation</button>
-          <button onclick="filterByTag('Dark Fantasy')" class="px-2.5 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors">#DarkFantasy</button>
-          <button onclick="filterByTag('Seiyuu Heavy')" class="px-2.5 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition-colors">#SeiyuuHeavy</button>
-        </div>
-      </div>
-    </section>
+        <button type="submit" class="wiki-search-btn w-12 flex items-center justify-center text-white rounded-r flex-shrink-0">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+      </form>
 
-    <!-- ================= SPOTLIGHT ARTICLE OF THE DAY ================= -->
-    <section>
-      <div class="flex items-center justify-between mb-4">
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-star text-amber-400 text-sm"></i>
-          <h2 class="text-lg font-bold text-white tracking-wide uppercase font-mono text-xs">Featured Encyclopedia Article</h2>
-        </div>
-        <span class="text-xs text-slate-400 font-mono">Curated Daily Spotlight</span>
+      <div class="w-full flex items-center justify-center gap-3 my-6">
+        <div class="h-px bg-slate-800 flex-grow max-w-[80px]"></div>
+        <button onclick="togglePortalLanguages()" class="text-xs text-[#629cf8] hover:underline flex items-center gap-2 border border-slate-800 rounded px-3 py-1.5 bg-[#10141d]">
+          <i class="fa-solid fa-language text-slate-400"></i>
+          <span>Read AniPedia in your language</span>
+          <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+        </button>
+        <div class="h-px bg-slate-800 flex-grow max-w-[80px]"></div>
       </div>
 
-      <div class="bg-brand-panel border border-brand-border rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 shadow-xl hover:border-slate-600 transition-all">
-        <!-- Visual Banner with Fallback SVG -->
-        <div class="lg:col-span-4 relative bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 p-6 flex flex-col justify-between min-h-[260px]">
-          <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#8b5cf6_1px,transparent_1px)] [background-size:16px_16px]"></div>
-          
-          <div class="relative z-10">
-            <div class="flex flex-wrap gap-2 mb-3">
-              <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-purple-600 text-white">Anime Series</span>
-              <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800">Masterwork Verified</span>
-            </div>
-            <h3 class="text-2xl font-extrabold text-white">Chrono Nexus: Zero</h3>
-            <p class="text-xs text-slate-400 font-mono mt-1">クロノ・ネクサス・ゼロ • Studio Triggerwave • 2024</p>
-          </div>
-
-          <div class="relative z-10 pt-6">
-            <div class="bg-black/40 backdrop-blur-md rounded-xl p-3 border border-white/10 text-xs space-y-1.5 font-mono">
-              <div class="flex justify-between"><span class="text-slate-400">Episodes Curated:</span> <span class="text-purple-300 font-bold">24 / 24 Complete</span></div>
-              <div class="flex justify-between"><span class="text-slate-400">Total Characters:</span> <span class="text-slate-200">32 Identified</span></div>
-              <div class="flex justify-between"><span class="text-slate-400">Voice Cast Logged:</span> <span class="text-slate-200">JP & EN Dual-Track</span></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Article Content Preview -->
-        <div class="lg:col-span-8 p-6 lg:p-7 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between text-xs text-slate-400 font-mono border-b border-brand-border pb-3 mb-4">
-              <span>ARTICLE ID: #AP-2024-889</span>
-              <span>VERIFIED BY CURATOR: Alex_R</span>
-            </div>
-            <h4 class="text-sm font-semibold text-purple-400 uppercase tracking-wider font-mono mb-2">Premise & Historical Significance</h4>
-            <p class="text-slate-300 text-sm leading-relaxed mb-4">
-              Set in the fractured temporal metropolis of Neo-Kyoto in 2099, the series chronicles Kaito Murasame's struggle against retro-causal reality collapse. Praised by animators for its revolutionary 2D frame acceleration and complex philosophical inquiry into memory synthesis. All 24 episodes have complete scene breakdowns, dialogue timestamps, and storyboard commentary indexed below.
-            </p>
-
-            <!-- Featured Character & Voice Cast Snippet -->
-            <div class="mt-4">
-              <div class="text-xs font-semibold text-slate-300 mb-2 font-mono uppercase">Key Cast Documented:</div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <div class="p-2 rounded bg-[#10141d] border border-brand-border flex items-center justify-between">
-                  <div>
-                    <span class="font-semibold text-slate-200">Kaito Murasame</span>
-                    <span class="text-[10px] text-slate-400 block">Protagonist • Temporal Courier</span>
-                  </div>
-                  <div class="text-right text-[11px]">
-                    <span class="text-purple-300 block">Mamoru Miyano (JP)</span>
-                    <span class="text-slate-400">Johnny Yong Bosch (EN)</span>
-                  </div>
-                </div>
-
-                <div class="p-2 rounded bg-[#10141d] border border-brand-border flex items-center justify-between">
-                  <div>
-                    <span class="font-semibold text-slate-200">Iris Vance</span>
-                    <span class="text-[10px] text-slate-400 block">Lead Deuteragonist • Quantum AI</span>
-                  </div>
-                  <div class="text-right text-[11px]">
-                    <span class="text-purple-300 block">Saori Hayami (JP)</span>
-                    <span class="text-slate-400">Cherami Leigh (EN)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-6 mt-6 border-t border-brand-border flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-2">
-              <span class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-300 font-mono">Sci-Fi</span>
-              <span class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-300 font-mono">Time Travel</span>
-              <span class="text-xs px-2 py-1 rounded bg-slate-800 text-slate-300 font-mono">Sakuga Priority</span>
-            </div>
-            <button onclick="openEntryDetail('chrono-nexus')" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg shadow transition-all flex items-center gap-2">
-              <span>Read Full Wiki Entry & Episode Logs</span>
-              <i class="fa-solid fa-arrow-right text-xs"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ================= RECENT DETAILED EPISODE BREAKDOWNS (CORE SHOWCASE) ================= -->
-    <section>
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-        <div>
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-film text-sky-400 text-sm"></i>
-            <h2 class="text-lg font-bold text-white tracking-wide uppercase font-mono text-xs">Latest Episode & Chapter Chronicles</h2>
-          </div>
-          <p class="text-xs text-slate-400">Detailed manually authored scene-by-scene records & plot developments</p>
-        </div>
-        <span class="text-[11px] font-mono text-purple-400 bg-purple-950/60 px-2.5 py-1 rounded border border-purple-900/60 self-start sm:self-auto">
-          Chronicle Feed Live
-        </span>
+      <div id="languageDrawer" class="hidden bg-[#10141d] border border-slate-800 rounded-lg p-4 text-xs text-slate-300 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center mb-6">
+        <a href="#" onclick="switchLang('English'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">English</a>
+        <a href="#" onclick="switchLang('日本語'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">日本語</a>
+        <a href="#" onclick="switchLang('Français'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">Français</a>
+        <a href="#" onclick="switchLang('Español'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">Español</a>
+        <a href="#" onclick="switchLang('Deutsch'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">Deutsch</a>
+        <a href="#" onclick="switchLang('中文'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">中文</a>
+        <a href="#" onclick="switchLang('한국어'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">한국어</a>
+        <a href="#" onclick="switchLang('Italiano'); return false;" class="hover:text-[#629cf8] p-1 rounded hover:bg-slate-800">Italiano</a>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="recentRecapsFeed">
-        <!-- Rendered by JavaScript -->
-      </div>
-    </section>
-
-    <!-- ================= MAIN ARCHIVE EXPLORER / BROWSE DIRECTORY ================= -->
-    <section id="directorySection" class="pt-4">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
-        <div>
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-layer-group text-purple-400 text-sm"></i>
-            <h2 class="text-xl font-bold text-white">Archival Directory</h2>
-          </div>
-          <p class="text-xs text-slate-400 mt-0.5">Explore works across Japanese anime, global animations, manga, and adult archives.</p>
-        </div>
-
-        <!-- Directory Category Filter Tabs -->
-        <div class="flex flex-wrap items-center gap-1.5 p-1 bg-brand-panel border border-brand-border rounded-xl">
-          <button onclick="setActiveTab('all')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium transition-all active bg-purple-600 text-white" data-tab="all">All</button>
-          <button onclick="setActiveTab('anime')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all" data-tab="anime">Anime</button>
-          <button onclick="setActiveTab('animation')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all" data-tab="animation">Global/Indie</button>
-          <button onclick="setActiveTab('manga')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all" data-tab="manga">Manga & Sequential</button>
-          <button onclick="setActiveTab('adult')" class="tab-btn px-3 py-1.5 rounded-lg text-xs font-medium text-pink-400 hover:text-pink-300 transition-all flex items-center gap-1" data-tab="adult">
-            <i class="fa-solid fa-lock text-[10px]"></i> 18+ Vault
-          </button>
-        </div>
-      </div>
-
-      <!-- Live Results Grid -->
-      <div id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        <!-- Injected via JavaScript -->
-      </div>
-
-      <!-- Empty State -->
-      <div id="emptyCatalogState" class="hidden text-center py-16 px-4 bg-brand-panel border border-dashed border-brand-border rounded-2xl">
-        <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-3"></i>
-        <h3 class="text-base font-semibold text-slate-300">No archival entries matched this filter</h3>
-        <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Try enabling the 18+ toggle if browsing adult media, or clear search queries.</p>
-        <button onclick="setActiveTab('all')" class="mt-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-medium rounded-lg text-white">Reset Directory</button>
-      </div>
-    </section>
-
-    <!-- ================= VOICE ACTOR & CHARACTER DUAL INDEX SPOTLIGHT ================= -->
-    <section class="mt-10 bg-gradient-to-b from-[#131722] to-[#0e1117] border border-brand-border rounded-2xl p-6 shadow-xl">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
-        <div>
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-microphone-lines text-emerald-400 text-sm"></i>
-            <h2 class="text-lg font-bold text-white tracking-wide uppercase font-mono text-xs">Cast Registry: Character & Seiyū Matrix</h2>
-          </div>
-          <p class="text-xs text-slate-400">Cross-referencing characters with their original Japanese seiyū and English localized voice talent.</p>
-        </div>
-        <span class="text-xs text-slate-400 font-mono">Linked Cross-References</span>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="castMatrixGrid">
-        <!-- Rendered by JS -->
-      </div>
-    </section>
+    </div>
 
   </main>
 
-  <!-- ================= ENCYCLOPEDIA FOOTER ================= -->
-  <footer class="mt-16 border-t border-brand-border bg-[#0a0d12] text-slate-400 text-xs">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
+  <footer class="w-full bg-[#080b0f] border-t border-slate-800/80 pt-10 pb-8 text-slate-400 text-xs">
+    <div class="max-w-6xl mx-auto px-4">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10">
         
-        <div class="col-span-2">
-          <div class="flex items-center gap-2 mb-3">
-            <div class="w-7 h-7 rounded bg-purple-600 flex items-center justify-center text-white text-xs font-bold">
-              <i class="fa-solid fa-book-open"></i>
+        <div class="lg:col-span-4 space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full border border-slate-700 flex items-center justify-center flex-shrink-0 bg-[#121620]">
+              <i class="fa-solid fa-globe text-slate-200 text-lg"></i>
             </div>
-            <span class="text-lg font-bold text-white">Ani<span class="text-purple-400">Pedia</span></span>
+            <p class="text-xs leading-relaxed text-slate-300">
+              AniPedia is hosted by the AniMedia Foundation, an open-source non-profit archival project that also maintains a range of specialized otaku repositories.
+            </p>
           </div>
-          <p class="text-slate-400 leading-relaxed pr-6 text-xs">
-            AniPedia is an independent, non-profit encyclopedic initiative dedicated to the documentation, historic preservation, and detailed episode breakdown of animation, sequential art, voice acting performance, and subculture works worldwide.
-          </p>
-          <div class="mt-4 flex items-center gap-3 text-slate-400">
-            <span class="text-[11px] font-mono text-slate-500">Database Engine v1.0.4 • Local Ledger</span>
-          </div>
-        </div>
 
-        <div>
-          <h4 class="text-white font-semibold mb-3 font-mono text-[11px] tracking-wider uppercase">Archives</h4>
-          <ul class="space-y-2 text-xs">
-            <li><a href="#" onclick="setActiveTab('anime'); return false;" class="hover:text-purple-400 transition-colors">Anime Encyclopedia</a></li>
-            <li><a href="#" onclick="setActiveTab('animation'); return false;" class="hover:text-purple-400 transition-colors">Global & Indie Animation</a></li>
-            <li><a href="#" onclick="setActiveTab('manga'); return false;" class="hover:text-purple-400 transition-colors">Manga & Light Novels</a></li>
-            <li><a href="#" onclick="setActiveTab('adult'); return false;" class="hover:text-pink-400 transition-colors">18+ Vault (Hentai & OVA)</a></li>
-            <li><a href="#" class="hover:text-purple-400 transition-colors">Studio & Animator Index</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="text-white font-semibold mb-3 font-mono text-[11px] tracking-wider uppercase">People & Staff</h4>
-          <ul class="space-y-2 text-xs">
-            <li><a href="#" class="hover:text-purple-400 transition-colors">Seiyū (Voice Actors)</a></li>
-            <li><a href="#" class="hover:text-purple-400 transition-colors">Dub Cast Directory</a></li>
-            <li><a href="#" class="hover:text-purple-400 transition-colors">Animation Directors</a></li>
-            <li><a href="#" class="hover:text-purple-400 transition-colors">Key Sakuga Animators</a></li>
-            <li><a href="#" class="hover:text-purple-400 transition-colors">Soundtracks & Composers</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="text-white font-semibold mb-3 font-mono text-[11px] tracking-wider uppercase">Policies & Guidelines</h4>
-          <ul class="space-y-2 text-xs">
-            <li><a href="#" onclick="openDisclaimerModal(); return false;" class="hover:text-purple-400 transition-colors">Content & Age Advisory</a></li>
-            <li><a href="#" class="hover:text-purple-400 transition-colors">Episode Recapping Standards</a></li>
-            <li><a href="#" class="hover:text-purple-400 transition-colors">Spoiler Formatting Rules</a></li>
-            <li><a href="#" class="hover:text-purple-400 transition-colors">Creative Commons Usage</a></li>
-            <li><a href="#" class="hover:text-purple-400 transition-colors">Manual Logging Schema</a></li>
-          </ul>
-        </div>
-
-      </div>
-
-      <div class="pt-8 border-t border-brand-border/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500 font-mono">
-        <div>
-          AniPedia Project. Text content cataloged under encyclopedic fair-use documentation.
-        </div>
-        <div class="flex items-center gap-4">
-          <span>Safe Browsing Active</span>
-          <span>•</span>
-          <span>Explicit Vault Strict Compliance</span>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ================= ENTRY DETAIL & EPISODE RECAP MODAL ================= -->
-  <div id="entryDetailModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6 overflow-y-auto">
-    <div class="bg-[#121620] border border-brand-border rounded-2xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden my-auto transform transition-all">
-      
-      <!-- Modal Top Bar -->
-      <div class="px-6 py-4 border-b border-brand-border flex items-center justify-between bg-[#161c28]">
-        <div class="flex items-center gap-3">
-          <span id="modalTypeBadge" class="px-2.5 py-0.5 rounded text-xs font-semibold bg-purple-600 text-white font-mono uppercase">Anime</span>
-          <span id="modalIdLabel" class="text-xs text-slate-400 font-mono">ID: #AP-0000</span>
-        </div>
-        <button onclick="closeEntryModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors">
-          <i class="fa-solid fa-xmark text-sm"></i>
-        </button>
-      </div>
-
-      <!-- Modal Body (Scrollable) -->
-      <div class="p-6 overflow-y-auto space-y-6 text-sm" id="modalScrollBody">
-        <!-- Populated by JavaScript -->
-      </div>
-
-      <!-- Modal Bottom Actions -->
-      <div class="px-6 py-3.5 border-t border-brand-border bg-[#0e121a] flex items-center justify-between text-xs">
-        <span class="text-slate-400 font-mono text-[11px]">Hand-authored entry record in AniPedia archive</span>
-        <button onclick="closeEntryModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors font-medium">Close Entry</button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ================= AGE GATE CONFIRMATION MODAL ================= -->
-  <div id="ageGateModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="bg-[#151923] border border-pink-900/60 rounded-2xl max-w-md w-full p-6 text-center shadow-2xl space-y-4">
-      <div class="w-14 h-14 mx-auto rounded-full bg-pink-950/80 border border-pink-700/60 flex items-center justify-center text-pink-400 text-2xl">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-      </div>
-      <div>
-        <h3 class="text-xl font-bold text-white">Age Verification Required</h3>
-        <p class="text-xs text-slate-300 mt-2 leading-relaxed">
-          The 18+ Vault contains uncensored documentation of adult animations, hentai OVAs, explicit sequential art, and mature character themes.
-        </p>
-        <p class="text-[11px] text-slate-400 mt-1 font-mono">
-          By proceeding, you verify that you are at least 18 years of age (or the legal age of majority in your jurisdiction).
-        </p>
-      </div>
-      <div class="grid grid-cols-2 gap-3 pt-2">
-        <button onclick="cancelAgeGate()" class="px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition-colors">
-          Cancel / Return
-        </button>
-        <button onclick="confirmAgeGate()" class="px-4 py-2.5 rounded-lg bg-pink-600 hover:bg-pink-500 text-white text-xs font-semibold shadow-lg shadow-pink-950/40 transition-colors">
-          I am 18 or Older
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= CONTRIBUTOR / LOG ENTRY MODAL ================= -->
-  <div id="contributeModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-[#131722] border border-brand-border rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-brand-border pb-3">
-        <div class="flex items-center gap-2">
-          <i class="fa-solid fa-code font-mono text-purple-400"></i>
-          <h3 class="text-base font-bold text-white">Manual Episode & Entry Logging Format</h3>
-        </div>
-        <button onclick="closeEditorNoticeModal()" class="text-slate-400 hover:text-white">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      
-      <p class="text-xs text-slate-300 leading-relaxed">
-        Because you are curating and entering all records by hand, AniPedia uses this structured schema. Copy this standard layout to draft new episodes into the catalog:
-      </p>
-
-      <div class="relative bg-[#090b10] border border-slate-800 rounded-lg p-3 text-[11px] font-mono text-slate-300 max-h-60 overflow-y-auto">
-<pre>{
-  "id": "series-slug",
-  "title": { "romaji": "Title", "native": "日本語" },
-  "type": "anime", // anime, animation, manga, adult
-  "isAdult": false,
-  "episodes": [
-    {
-      "ep": 1,
-      "title": "Episode Title",
-      "recap": "Step-by-step narrative breakdown...",
-      "keyEvents": ["Event A", "Event B"],
-      "castFeatured": ["Character ID"]
-    }
-  ]
-}</pre>
-      </div>
-
-      <div class="flex justify-between items-center pt-2">
-        <span class="text-[11px] text-slate-500">Flat-file ready architecture</span>
-        <button onclick="closeEditorNoticeModal()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-medium">
-          Understood
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ================= ENCYCLOPEDIA DATABASE (SELF-CONTAINED DATA) ================= -->
-  <script>
-    // Primary Encyclopedia Data Store
-    const ANIPEDIA_DATA = [
-      {
-        id: "chrono-nexus",
-        title: "Chrono Nexus: Zero",
-        nativeTitle: "クロノ・ネクサス・ゼロ",
-        type: "anime",
-        isAdult: false,
-        releaseYear: 2024,
-        status: "Completed (24 Episodes)",
-        studio: "Studio Triggerwave",
-        format: "TV Anime Series",
-        tags: ["Sci-Fi", "Time Travel", "Cyberpunk", "Sakuga Priority"],
-        rating: "TV-14",
-        bannerColor: "from-indigo-900 to-purple-950",
-        summary: "In a shattered timeline where retro-causality can collapse entire sectors of Neo-Kyoto, a disenfranchised memory courier named Kaito Murasame accidentally recovers a sentient quantum drive containing encrypted chronal coordinates of the universe's initial reboot.",
-        characters: [
-          {
-            name: "Kaito Murasame",
-            role: "Protagonist / Temporal Courier",
-            bio: "A cynical courier immune to localized reality shifts due to childhood chronal exposure.",
-            seiyuuJP: "Mamoru Miyano",
-            vaEN: "Johnny Yong Bosch"
-          },
-          {
-            name: "Iris Vance",
-            role: "Lead Deuteragonist / Quantum AI",
-            bio: "An enigmatic synthetic entity who remembers previous deleted timelines.",
-            seiyuuJP: "Saori Hayami",
-            vaEN: "Cherami Leigh"
-          },
-          {
-            name: "Commander Raizo Vance",
-            role: "Antagonist / Bureau of Continuum",
-            bio: "Obsessed with locking the timeline into a permanent, predictable stasis loop.",
-            seiyuuJP: "Akio Otsuka",
-            vaEN: "Crispin Freeman"
-          }
-        ],
-        episodes: [
-          {
-            number: 1,
-            title: "Tears in the Chrono-Stream",
-            airDate: "2024-04-06",
-            runtime: "24m",
-            synopsis: "Kaito accepts an off-the-grid delivery through District 04, triggering an armed response from the Temporal Enforcement Bureau.",
-            recap: "The episode begins in medias res at 03:00 AM Neo-Kyoto. Kaito leaps across the neon skyscrapers to evade hunter-drones. At timestamp 08:42, he discovers the package is not contraband cyberware but an active neural core containing Iris Vance. When a temporal shockwave freezes the city square, only Kaito and Iris remain unfrozen, setting off the primary conflict.",
-            keyEvents: [
-              "First manifestation of Kaito's temporal anchoring ability",
-              "Activation of the Iris Neural Core",
-              "Destruction of the District 04 Monorail terminus"
-            ]
-          },
-          {
-            number: 2,
-            title: "Echoes of the Erased",
-            airDate: "2024-04-13",
-            runtime: "24m",
-            synopsis: "Hiding in the subterranean ruins of Old Tokyo, Iris decodes fragments of Kaito's missing past.",
-            recap: "Deep within the flooded tunnels, Kaito brings Iris to an outlaw technician. Iris interfaces with the old terminal grid, inadvertently projecting holographic memories of a war fought in 2070 that never technically happened. Bureau agents breach the perimeter at 17:30 leading to an intense sakuga hand-to-hand sequence.",
-            keyEvents: [
-              "Introduction of the Deleted War of 2070",
-              "Raizo's enforcement squad intercepts the safehouse"
-            ]
-          },
-          {
-            number: 3,
-            title: "Causality Paradox",
-            airDate: "2024-04-20",
-            runtime: "25m",
-            synopsis: "A failed temporal leap causes Kaito to meet an alternate version of himself from a doomed timeline.",
-            recap: "An experimental chronal leap destabilizes the sector. Kaito confronts a battle-hardened version of himself from Timeline Sigma-9, who warns him that saving Iris will guarantee the collapse of Earth's solar grid. The moral dilemma forms the core thematic weight of the first cour.",
-            keyEvents: [
-              "Meeting with Timeline Sigma-9 Kaito",
-              "Delivery of the Chronal Key artifact"
-            ]
-          }
-        ]
-      },
-      {
-        id: "neon-samurai",
-        title: "Neon Blade: Ronin 2088",
-        nativeTitle: "ネオン・ブレード：浪人",
-        type: "anime",
-        isAdult: false,
-        releaseYear: 2023,
-        status: "Completed (12 Episodes)",
-        studio: "Mappa Labs",
-        format: "OVA / Limited Series",
-        tags: ["Cyberpunk", "Action", "Seiyuu Heavy", "Dark Fantasy"],
-        rating: "TV-MA",
-        bannerColor: "from-rose-950 to-slate-900",
-        summary: "In a corporate-owned Tokyo where traditional steel swords have been replaced with plasma edge katanas, an exiled cyber-samurai seeks redemption against the syndicate that took his humanity.",
-        characters: [
-          {
-            name: "Jinzo 'The Rust' Kurogane",
-            role: "Protagonist / Exiled Ronin",
-            bio: "A cybernetically reconstructed swordsman bound by an outdated code of honor.",
-            seiyuuJP: "Kenjiro Tsuda",
-            vaEN: "Keith Silverstein"
-          },
-          {
-            name: "Hana Takahashi",
-            role: "Deuteragonist / Hacker",
-            bio: "A rogue databroker possessing proof of executive clone trafficking.",
-            seiyuuJP: "Aoi Yuki",
-            vaEN: "Erika Harlacher"
-          }
-        ],
-        episodes: [
-          {
-            number: 1,
-            title: "Rust on the Edge",
-            airDate: "2023-10-02",
-            runtime: "23m",
-            synopsis: "Jinzo is hired to extract an anonymous databroker from the notorious Kabukicho red light district.",
-            recap: "The pilot opens with a 4-minute continuous tracking shot of a rainy alleyway ambush. Jinzo cuts through eight cyber-yakuza enforcers using his signature low-stance plasma strike. He reaches the drop point to discover Hana.",
-            keyEvents: ["The Kabukicho alley clash", "Unveiling of the Syndicate data drive"]
-          },
-          {
-            number: 2,
-            title: "Blood and Chrome",
-            airDate: "2023-10-09",
-            runtime: "24m",
-            synopsis: "Pursued by corporate assassins, Jinzo and Hana take refuge in an abandoned Buddhist shrine atop the skyline.",
-            recap: "Hana reveals the data drive contains DNA signatures of government ministers. Jinzo's cybernetics overheat during a rooftop battle in a thunderstorm.",
-            keyEvents: ["Rooftop duel in the storm", "Jinzo's neural dampener malfunction"]
-          }
-        ]
-      },
-      {
-        id: "scavengers-orbit",
-        title: "Scavengers of the Void",
-        nativeTitle: "Void Wanderers",
-        type: "animation",
-        isAdult: false,
-        releaseYear: 2025,
-        status: "Ongoing (Season 1)",
-        studio: "Sunburst Western Animation / Independent",
-        format: "Web Animation Series",
-        tags: ["Indie Animation", "Sci-Fi", "Psychological", "Adventure"],
-        rating: "PG-13",
-        bannerColor: "from-amber-950 to-stone-900",
-        summary: "An independent hand-drawn western animation following an eccentric salvage crew traversing the debris graveyard of an extinct alien Dyson sphere.",
-        characters: [
-          {
-            name: "Captain Vesper Cole",
-            role: "Captain & Lead Engineer",
-            bio: "Pragmatic scrapper who has spent 20 years picking apart derelict alien hulks.",
-            seiyuuJP: "Hiroshi Kamiya",
-            vaEN: "Matthew Mercer"
-          },
-          {
-            name: "Unit 7-K ('Pip')",
-            role: "Autonomous Biosensor Droid",
-            bio: "A salvaged companion bot with an erratic personality matrix.",
-            seiyuuJP: "Rie Kugimiya",
-            vaEN: "Tara Strong"
-          }
-        ],
-        episodes: [
-          {
-            number: 1,
-            title: "Derelict Echo",
-            airDate: "2025-01-15",
-            runtime: "18m",
-            synopsis: "The crew boards a drifting leviathan that appears to be harvesting solar radiation from a dead star.",
-            recap: "Notable for lush non-digital background paintings. Vesper discovers an intact biopod with living alien flora that emits low-frequency radio transmissions mimics human vocal cords.",
-            keyEvents: ["Discovery of the alien biopod", "The gravity-loss sequence in Section C"]
-          }
-        ]
-      },
-      {
-        id: "manga-silent-valkyrie",
-        title: "Silent Valkyrie: Requiem",
-        nativeTitle: "静寂のワルキューレ",
-        type: "manga",
-        isAdult: false,
-        releaseYear: 2021,
-        status: "Completed (88 Chapters)",
-        studio: "Kodansha Monthly (Serialization)",
-        format: "Manga / Sequential Art",
-        tags: ["Dark Fantasy", "Action", "Psychological"],
-        rating: "16+",
-        bannerColor: "from-slate-900 to-zinc-950",
-        summary: "A gothic dark-fantasy manga exploring an elite legion of mute paladins sworn to fight cosmic entities emerging from the tectonic rifts of the northern continent.",
-        characters: [
-          {
-            name: "Celes of the Northern Ridge",
-            role: "Mute Paladin",
-            bio: "Communicates entirely via sign-language and tactile sword runes.",
-            seiyuuJP: "N/A (Manga Original)",
-            vaEN: "N/A (Manga Original)"
-          }
-        ],
-        episodes: [
-          {
-            number: 1,
-            title: "Chapter 1: The Vow of Absolute Quiet",
-            airDate: "2021-03-12",
-            runtime: "54 pages",
-            synopsis: "Celes completes her final trial at the Cathedral of Ash and faces her first Abyssal emergence.",
-            recap: "Detailed 54-page double-spread masterclass depicting the silent assault on Fortress Wall Ironheim. Celes uses resonance vibration blades to fell the mountain-sized behemoth.",
-            keyEvents: ["The Ritual of Silence", "Fall of Fortress Wall Ironheim"]
-          }
-        ]
-      },
-      {
-        id: "succubus-academy-18",
-        title: "Midnight Sacrament: Crimson Seal",
-        nativeTitle: "紅蓮の聖痕 ～真夜中の秘儀～",
-        type: "adult",
-        isAdult: true,
-        releaseYear: 2024,
-        status: "Completed (4 OVAs)",
-        studio: "Studio Pink Blossom",
-        format: "Adult 18+ OVA (Hentai)",
-        tags: ["18+ Adult", "Supernatural", "Romance", "Hentai Vault"],
-        rating: "R18+ (Adults Only)",
-        bannerColor: "from-pink-950 to-rose-950",
-        summary: "An uncensored dark supernatural adult OVA detailing the occult pact between an exiled sorcerer and an ancient vampire matriarch attempting to restore her noble demonic bloodline.",
-        characters: [
-          {
-            name: "Lady Carmilla Von Drake",
-            role: "Vampiric Matriarch",
-            bio: "High nobility among the night creatures seeking a worthy mortal consort.",
-            seiyuuJP: "Haruka Sora (Alias)",
-            vaEN: "Not Dubbed"
-          },
-          {
-            name: "Lucian Ray",
-            role: "Bound Sorcerer",
-            bio: "Gifted human alchemist whose blood carries pure arcane catalysts.",
-            seiyuuJP: "Kazuya Ichijo (Alias)",
-            vaEN: "Not Dubbed"
-          }
-        ],
-        episodes: [
-          {
-            number: 1,
-            title: "Episode 1: The Blood Pact under the Eclipse",
-            airDate: "2024-05-18",
-            runtime: "28m",
-            synopsis: "Lucian enters the forbidden gothic estate to seal the ancient covenant with Carmilla.",
-            recap: "Contains extensive explicit sexual animation and uncensored dark fantasy themes. Lucian performs the ritual chant, willingly submitting to Carmilla's seduction to unlock sealed mana passages.",
-            keyEvents: ["Signing of the Blood Contract", "Initiation of the Bloodline Rite"]
-          },
-          {
-            number: 2,
-            title: "Episode 2: Moonlight Desires",
-            airDate: "2024-07-22",
-            runtime: "29m",
-            synopsis: "The second phase of the covenant requires visiting the underground sanctum during the full blood moon.",
-            recap: "Detailed scene breakdowns of Carmilla and her dual familiars testing Lucian's stamina and magical output.",
-            keyEvents: ["Awakening of the Familiar Twins", "Catalyst Overflow"]
-          }
-        ]
-      },
-      {
-        id: "cyber-alchemist",
-        title: "Synthetic Elixir: 2049",
-        nativeTitle: "電子錬金術師",
-        type: "manga",
-        isAdult: false,
-        releaseYear: 2022,
-        status: "Completed (42 Chapters)",
-        studio: "Young King OURs",
-        format: "Cyberpunk Manga",
-        tags: ["Cyberpunk", "Sci-Fi", "Action"],
-        rating: "17+",
-        bannerColor: "from-teal-950 to-slate-900",
-        summary: "In an underground economy where human organs can be chemically synthesized from rare heavy metals, an unlicensed alchemist wages war on monopolistic pharmaceutical cartels.",
-        characters: [
-          {
-            name: "Dr. Shinjiro Oki",
-            role: "Lead Alchemist",
-            bio: "A disgraced bio-tech engineer creating generic cyber-livers and lungs for slums.",
-            seiyuuJP: "Takehito Koyasu",
-            vaEN: "Ray Chase"
-          }
-        ],
-        episodes: [
-          {
-            number: 1,
-            title: "Recipe 1: Lead to Hemoglobin",
-            airDate: "2022-01-10",
-            runtime: "40 pages",
-            synopsis: "Oki successfully synthesizes artificial blood in a makeshift laboratory during a cartel raid.",
-            recap: "Fast-paced action breakdown showcasing how Oki transmutes pipe metals into active bio-chemical suppressors.",
-            keyEvents: ["First trial of synthetic Hemoglobin-9", "Raid on Sector 8 lab"]
-          }
-        ]
-      }
-    ];
-
-    // Global App State
-    let nsfwEnabled = false;
-    let currentFilter = 'all';
-    let searchQuery = '';
-    let pendingNsfwEntry = null;
-
-    // Initialize application on load
-    window.onload = function() {
-      // Check localStorage for saved NSFW state
-      const savedNsfw = localStorage.getItem('anipedia_nsfw_mode');
-      if (savedNsfw === 'true') {
-        nsfwEnabled = true;
-        updateNsfwUI();
-      }
-
-      renderCatalog();
-      renderRecentRecaps();
-      renderCastMatrix();
-      setupSearchListeners();
-    };
-
-    // ================= NSFW VAULT TOGGLE & AGE GATE =================
-    function toggleNsfwMode() {
-      if (!nsfwEnabled) {
-        // Trigger Age-Gate Modal
-        document.getElementById('ageGateModal').classList.remove('hidden');
-        document.getElementById('ageGateModal').classList.add('flex');
-      } else {
-        // Directly disable
-        nsfwEnabled = false;
-        localStorage.setItem('anipedia_nsfw_mode', 'false');
-        updateNsfwUI();
-        if (currentFilter === 'adult') {
-          currentFilter = 'all';
-        }
-        renderCatalog();
-      }
-    }
-
-    function confirmAgeGate() {
-      nsfwEnabled = true;
-      localStorage.setItem('anipedia_nsfw_mode', 'true');
-      document.getElementById('ageGateModal').classList.add('hidden');
-      document.getElementById('ageGateModal').classList.remove('flex');
-      updateNsfwUI();
-      renderCatalog();
-      
-      if (pendingNsfwEntry) {
-        const idToOpen = pendingNsfwEntry;
-        pendingNsfwEntry = null;
-        openEntryDetail(idToOpen);
-      }
-    }
-
-    function cancelAgeGate() {
-      pendingNsfwEntry = null;
-      document.getElementById('ageGateModal').classList.add('hidden');
-      document.getElementById('ageGateModal').classList.remove('flex');
-      if (currentFilter === 'adult') {
-        setActiveTab('all');
-      }
-    }
-
-    function updateNsfwUI() {
-      const toggleBtn = document.getElementById('nsfwToggleBtn');
-      const thumb = document.getElementById('nsfwThumb');
-      const shield = document.getElementById('nsfwShield');
-
-      if (nsfwEnabled) {
-        toggleBtn.classList.remove('bg-slate-700');
-        toggleBtn.classList.add('bg-pink-600');
-        thumb.classList.remove('translate-x-0', 'bg-slate-300');
-        thumb.classList.add('translate-x-4', 'bg-white');
-        shield.classList.remove('text-amber-400');
-        shield.classList.add('text-pink-400');
-      } else {
-        toggleBtn.classList.remove('bg-pink-600');
-        toggleBtn.classList.add('bg-slate-700');
-        thumb.classList.add('translate-x-0', 'bg-slate-300');
-        thumb.classList.remove('translate-x-4', 'bg-white');
-        shield.classList.add('text-amber-400');
-        shield.classList.remove('text-pink-400');
-      }
-    }
-
-    // ================= DIRECTORY TAB FILTERING =================
-    function setActiveTab(tab) {
-      if (tab === 'adult' && !nsfwEnabled) {
-        // Trigger age gate first
-        pendingNsfwEntry = null;
-        document.getElementById('ageGateModal').classList.remove('hidden');
-        document.getElementById('ageGateModal').classList.add('flex');
-        return;
-      }
-
-      currentFilter = tab;
-      
-      // Update tab styles
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        if (btn.getAttribute('data-tab') === tab) {
-          btn.classList.add('bg-purple-600', 'text-white');
-          btn.classList.remove('text-slate-400');
-        } else {
-          btn.classList.remove('bg-purple-600', 'text-white');
-          btn.classList.add('text-slate-400');
-        }
-      });
-
-      renderCatalog();
-    }
-
-    function filterByTag(tag) {
-      const searchBox = document.getElementById('globalSearchInput');
-      searchBox.value = tag;
-      searchQuery = tag.toLowerCase();
-      renderCatalog();
-      document.getElementById('directorySection').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // ================= RENDER CATALOG CARDS =================
-    function renderCatalog() {
-      const grid = document.getElementById('catalogGrid');
-      const emptyState = document.getElementById('emptyCatalogState');
-      grid.innerHTML = '';
-
-      let filtered = ANIPEDIA_DATA.filter(item => {
-        // Respect 18+ filter
-        if (item.isAdult && !nsfwEnabled) return false;
-
-        // Type filter
-        if (currentFilter !== 'all' && item.type !== currentFilter) return false;
-
-        // Search text filter
-        if (searchQuery.trim() !== '') {
-          const matchTitle = item.title.toLowerCase().includes(searchQuery);
-          const matchNative = item.nativeTitle.toLowerCase().includes(searchQuery);
-          const matchSummary = item.summary.toLowerCase().includes(searchQuery);
-          const matchTags = item.tags.some(t => t.toLowerCase().includes(searchQuery));
-          const matchChar = item.characters.some(c => c.name.toLowerCase().includes(searchQuery) || (c.seiyuuJP && c.seiyuuJP.toLowerCase().includes(searchQuery)));
-          if (!matchTitle && !matchNative && !matchSummary && !matchTags && !matchChar) {
-            return false;
-          }
-        }
-
-        return true;
-      });
-
-      if (filtered.length === 0) {
-        emptyState.classList.remove('hidden');
-      } else {
-        emptyState.classList.add('hidden');
-      }
-
-      filtered.forEach(item => {
-        const totalEps = item.episodes.length;
-        const card = document.createElement('div');
-        card.className = `wiki-card bg-brand-panel border border-brand-border rounded-xl overflow-hidden flex flex-col justify-between cursor-pointer ${item.isAdult ? 'border-pink-900/50 hover:border-pink-500' : ''}`;
-        card.onclick = () => openEntryDetail(item.id);
-
-        // Badge styling
-        let typeBadgeClass = 'bg-purple-900/80 text-purple-300 border border-purple-700/50';
-        let typeIcon = 'fa-tv';
-        if (item.type === 'animation') {
-          typeBadgeClass = 'bg-sky-950 text-sky-300 border border-sky-800/60';
-          typeIcon = 'fa-film';
-        } else if (item.type === 'manga') {
-          typeBadgeClass = 'bg-emerald-950 text-emerald-300 border border-emerald-800/60';
-          typeIcon = 'fa-book';
-        } else if (item.type === 'adult') {
-          typeBadgeClass = 'bg-pink-950 text-pink-300 border border-pink-800/60';
-          typeIcon = 'fa-heart text-pink-400';
-        }
-
-        card.innerHTML = `
-          <div class="relative bg-gradient-to-tr ${item.bannerColor} p-4 h-32 flex flex-col justify-between border-b border-brand-border/60">
-            <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider ${typeBadgeClass} flex items-center gap-1">
-                <i class="fa-solid ${typeIcon} text-[9px]"></i> ${item.format}
-              </span>
-              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/50 text-slate-300 border border-white/10">
-                ${item.releaseYear}
-              </span>
+          <div class="bg-[#10141d] border border-slate-800 p-4 rounded-lg flex items-start gap-3">
+            <div class="w-8 h-8 rounded bg-white text-black font-serif font-black flex items-center justify-center text-sm flex-shrink-0">
+              A
             </div>
             <div>
-              ${item.isAdult ? '<span class="text-[9px] font-bold font-mono px-1.5 py-0.5 rounded bg-red-600 text-white uppercase tracking-wider mb-1 inline-block">18+ Explicit Vault</span>' : ''}
-              <h3 class="text-base font-bold text-white leading-tight truncate">${item.title}</h3>
-              <p class="text-[11px] text-slate-300 truncate font-mono">${item.nativeTitle}</p>
-            </div>
-          </div>
-
-          <div class="p-4 flex-grow flex flex-col justify-between space-y-3">
-            <p class="text-xs text-slate-300 line-clamp-2 leading-relaxed">
-              ${item.summary}
-            </p>
-
-            <div class="space-y-2 pt-2 border-t border-brand-border/60">
-              <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="text-slate-400">Studio / Source:</span>
-                <span class="text-slate-200 truncate max-w-[130px]">${item.studio}</span>
-              </div>
-              <div class="flex items-center justify-between text-[11px] font-mono">
-                <span class="text-slate-400">Chronicle Logs:</span>
-                <span class="text-purple-400 font-semibold">${totalEps} Logged</span>
+              <div class="text-slate-100 font-semibold mb-1">AniPedia Reader for Mobile & Web</div>
+              <p class="text-[11px] text-slate-400 leading-normal mb-3">
+                Read character records, episode chronologies, and seiyū credits offline.
+              </p>
+              <div class="flex gap-2">
+                <span class="px-2.5 py-1 bg-[#1a2130] text-slate-300 rounded text-[10px] border border-slate-700">Web App</span>
+                <span class="px-2.5 py-1 bg-[#1a2130] text-slate-300 rounded text-[10px] border border-slate-700">Offline JSON</span>
               </div>
             </div>
-
-            <div class="flex flex-wrap gap-1 pt-1">
-              ${item.tags.slice(0, 3).map(tag => `<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">#${tag}</span>`).join('')}
-            </div>
-          </div>
-
-          <div class="px-4 py-2.5 bg-[#0e121a] border-t border-brand-border/60 flex items-center justify-between text-[11px]">
-            <span class="text-slate-400 font-mono"><i class="fa-solid fa-users text-purple-400 mr-1"></i> ${item.characters.length} Roles</span>
-            <span class="text-purple-400 hover:text-purple-300 font-medium flex items-center gap-1">
-              Inspect Wiki <i class="fa-solid fa-angle-right text-[10px]"></i>
-            </span>
-          </div>
-        `;
-
-        grid.appendChild(card);
-      });
-    }
-
-    // ================= RENDER RECENT EPISODE RECAPPING FEED =================
-    function renderRecentRecaps() {
-      const container = document.getElementById('recentRecapsFeed');
-      container.innerHTML = '';
-
-      // Flatten recent episodes across our library
-      let allEpisodes = [];
-      ANIPEDIA_DATA.forEach(series => {
-        if (series.isAdult && !nsfwEnabled) return;
-        series.episodes.forEach(ep => {
-          allEpisodes.push({
-            seriesId: series.id,
-            seriesTitle: series.title,
-            isAdult: series.isAdult,
-            format: series.format,
-            ...ep
-          });
-        });
-      });
-
-      // Take first 3 entries for the featured chronicle showcase
-      const recents = allEpisodes.slice(0, 3);
-
-      recents.forEach(entry => {
-        const card = document.createElement('div');
-        card.className = "bg-brand-panel border border-brand-border rounded-xl p-4 flex flex-col justify-between hover:border-slate-600 transition-colors cursor-pointer";
-        card.onclick = () => openEntryDetail(entry.seriesId);
-
-        card.innerHTML = `
-          <div>
-            <div class="flex items-center justify-between text-[11px] font-mono mb-2">
-              <span class="text-purple-400 font-semibold truncate">${entry.seriesTitle}</span>
-              <span class="text-slate-400">Ep ${entry.number}</span>
-            </div>
-            <h4 class="text-sm font-bold text-white mb-1.5 hover:text-purple-300 transition-colors">
-              "${entry.title}"
-            </h4>
-            <p class="text-xs text-slate-300 line-clamp-3 leading-relaxed mb-3">
-              ${entry.recap}
-            </p>
-          </div>
-
-          <div class="pt-3 border-t border-brand-border/60 space-y-2">
-            <div class="text-[10px] font-mono text-slate-400 uppercase">Key Logged Milestone:</div>
-            <div class="text-xs text-sky-300 font-mono flex items-center gap-1.5 truncate">
-              <i class="fa-solid fa-check text-[10px] text-emerald-400"></i>
-              ${entry.keyEvents ? entry.keyEvents[0] : 'Scene analysis logged'}
-            </div>
-            <div class="flex items-center justify-between text-[10px] text-slate-400 pt-1 font-mono">
-              <span>Runtime: ${entry.runtime || '24m'}</span>
-              <span class="text-purple-400 flex items-center gap-1">Read Recap <i class="fa-solid fa-arrow-right text-[9px]"></i></span>
-            </div>
-          </div>
-        `;
-
-        container.appendChild(card);
-      });
-    }
-
-    // ================= RENDER CAST MATRIX (CHARACTER + SEIYU) =================
-    function renderCastMatrix() {
-      const container = document.getElementById('castMatrixGrid');
-      container.innerHTML = '';
-
-      let castEntries = [];
-      ANIPEDIA_DATA.forEach(series => {
-        if (series.isAdult && !nsfwEnabled) return;
-        series.characters.forEach(char => {
-          castEntries.push({
-            seriesTitle: series.title,
-            seriesId: series.id,
-            character: char
-          });
-        });
-      });
-
-      // Showcase top entries
-      castEntries.slice(0, 6).forEach(pair => {
-        const item = document.createElement('div');
-        item.className = "p-3.5 rounded-xl bg-brand-panel/90 border border-brand-border flex items-center justify-between hover:border-slate-600 transition-all cursor-pointer";
-        item.onclick = () => openEntryDetail(pair.seriesId);
-
-        item.innerHTML = `
-          <div class="pr-2">
-            <div class="flex items-center gap-1.5">
-              <span class="text-xs font-bold text-white hover:text-purple-300">${pair.character.name}</span>
-            </div>
-            <span class="text-[10px] text-purple-400 font-mono block">${pair.character.role}</span>
-            <span class="text-[10px] text-slate-400 truncate block mt-0.5">${pair.seriesTitle}</span>
-          </div>
-
-          <div class="text-right pl-3 border-l border-brand-border/60 flex-shrink-0">
-            <div class="text-[11px] font-semibold text-slate-200">
-              ${pair.character.seiyuuJP || 'Japanese Cast'} <span class="text-[9px] text-purple-400 font-mono">JP</span>
-            </div>
-            <div class="text-[10px] text-slate-400">
-              ${pair.character.vaEN || 'English Dub'} <span class="text-[9px] text-sky-400 font-mono">EN</span>
-            </div>
-          </div>
-        `;
-
-        container.appendChild(item);
-      });
-    }
-
-    // ================= OPEN ENTRY DETAIL & EPISODE BREAKDOWN MODAL =================
-    function openEntryDetail(id) {
-      const entry = ANIPEDIA_DATA.find(x => x.id === id);
-      if (!entry) return;
-
-      if (entry.isAdult && !nsfwEnabled) {
-        pendingNsfwEntry = id;
-        document.getElementById('ageGateModal').classList.remove('hidden');
-        document.getElementById('ageGateModal').classList.add('flex');
-        return;
-      }
-
-      document.getElementById('modalTypeBadge').textContent = entry.type;
-      document.getElementById('modalIdLabel').textContent = `ID: #${entry.id.toUpperCase()}`;
-
-      const modalBody = document.getElementById('modalScrollBody');
-      modalBody.innerHTML = `
-        <!-- Entry Header -->
-        <div class="border-b border-brand-border pb-5">
-          <div class="flex flex-wrap items-center gap-2 mb-2">
-            <span class="text-xs px-2 py-0.5 rounded font-mono font-semibold bg-purple-950 text-purple-300 border border-purple-800">
-              ${entry.format}
-            </span>
-            <span class="text-xs px-2 py-0.5 rounded font-mono bg-slate-800 text-slate-300">
-              Release: ${entry.releaseYear}
-            </span>
-            <span class="text-xs px-2 py-0.5 rounded font-mono bg-slate-800 text-slate-300">
-              Status: ${entry.status}
-            </span>
-            ${entry.isAdult ? '<span class="text-xs px-2 py-0.5 rounded font-mono font-bold bg-pink-900 text-pink-200">18+ Explicit Vault Archive</span>' : ''}
-          </div>
-
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white">${entry.title}</h2>
-          <p class="text-sm text-slate-400 font-mono mt-0.5">${entry.nativeTitle} • Studio: ${entry.studio}</p>
-
-          <p class="mt-4 text-slate-300 leading-relaxed text-sm">
-            ${entry.summary}
-          </p>
-
-          <div class="flex flex-wrap gap-1.5 mt-3">
-            ${entry.tags.map(t => `<span class="text-xs px-2 py-0.5 bg-brand-panel border border-brand-border rounded text-slate-400 font-mono">#${t}</span>`).join('')}
           </div>
         </div>
 
-        <!-- Characters and Voice Cast Grid -->
-        <div>
-          <h3 class="text-xs font-bold text-purple-400 uppercase tracking-wider font-mono mb-3">
-            <i class="fa-solid fa-users text-xs mr-1"></i> Cataloged Characters & Multi-Cast Credits
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            ${entry.characters.map(char => `
-              <div class="p-3 rounded-xl bg-brand-panel border border-brand-border">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h4 class="font-bold text-white text-sm">${char.name}</h4>
-                    <span class="text-[10px] text-purple-300 font-mono block">${char.role}</span>
-                  </div>
-                </div>
-                <p class="text-xs text-slate-400 mt-2">${char.bio}</p>
-                <div class="mt-3 pt-2 border-t border-brand-border/60 text-[11px] space-y-0.5 font-mono">
-                  <div class="flex justify-between text-slate-300">
-                    <span class="text-slate-400">Original (JP):</span>
-                    <span class="text-purple-300">${char.seiyuuJP || 'None documented'}</span>
-                  </div>
-                  <div class="flex justify-between text-slate-300">
-                    <span class="text-slate-400">Localized (EN):</span>
-                    <span class="text-sky-300">${char.vaEN || 'None documented'}</span>
-                  </div>
-                </div>
+        <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-3 gap-y-6 gap-x-4">
+          
+          <div class="space-y-4">
+            <a href="javascript:void(0)" onclick="openProject('AniCommons')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#629cf8]">
+                <i class="fa-solid fa-photo-film"></i>
               </div>
-            `).join('')}
-          </div>
-        </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">AniCommons</div>
+                <div class="text-[11px] text-slate-400">Free media & sakuga frames</div>
+              </div>
+            </a>
 
-        <!-- Comprehensive Episode & Chapter Chronicles -->
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="text-xs font-bold text-purple-400 uppercase tracking-wider font-mono">
-              <i class="fa-solid fa-list-ol text-xs mr-1"></i> In-Depth Episode & Chapter Breakdowns (${entry.episodes.length} Logged)
-            </h3>
-            <span class="text-[11px] text-slate-400 font-mono">Manual Scene Documentation</span>
+            <a href="javascript:void(0)" onclick="openProject('MangaSource')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#4ade80]">
+                <i class="fa-solid fa-book-open"></i>
+              </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">MangaSource</div>
+                <div class="text-[11px] text-slate-400">Open sequential archives</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="openProject('AniQuote')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#f472b6]">
+                <i class="fa-solid fa-quote-left"></i>
+              </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">AniQuote</div>
+                <div class="text-[11px] text-slate-400">Famous quotes & scripts</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="openProject('HentaiArchive')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-pink-900/60 flex items-center justify-center text-pink-400">
+                <i class="fa-solid fa-shield-cat"></i>
+              </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">HentaiVault</div>
+                <div class="text-[11px] text-slate-400">18+ historical registry</div>
+              </div>
+            </a>
           </div>
 
           <div class="space-y-4">
-            ${entry.episodes.map(ep => `
-              <div class="bg-[#10131b] border border-brand-border rounded-xl p-4">
-                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-brand-border/60 pb-2 mb-2">
-                  <div class="flex items-center gap-2">
-                    <span class="w-6 h-6 rounded bg-purple-950 text-purple-300 border border-purple-800 text-xs font-mono font-bold flex items-center justify-center">
-                      ${ep.number}
-                    </span>
-                    <h4 class="text-sm font-bold text-white">${ep.title}</h4>
-                  </div>
-                  <div class="text-xs font-mono text-slate-400">
-                    <span>${ep.airDate || 'Archive Date'}</span> • <span>${ep.runtime || '24m'}</span>
-                  </div>
-                </div>
-
-                <div class="text-xs text-slate-300 space-y-2">
-                  <p><strong class="text-slate-200">Synopsis:</strong> ${ep.synopsis}</p>
-                  <div class="p-3 rounded-lg bg-[#0a0d13] border border-slate-800 text-slate-300 leading-relaxed font-sans">
-                    <strong class="text-purple-400 block font-mono text-[11px] mb-1">DETAILED NARRATIVE CHRONICLE:</strong>
-                    ${ep.recap}
-                  </div>
-                </div>
-
-                ${ep.keyEvents && ep.keyEvents.length > 0 ? `
-                  <div class="mt-3 pt-2 border-t border-brand-border/40">
-                    <span class="text-[10px] uppercase font-mono text-slate-400 block mb-1.5">Critical Plot Developments & Revelations:</span>
-                    <div class="flex flex-wrap gap-1.5">
-                      ${ep.keyEvents.map(evt => `
-                        <span class="text-[11px] px-2 py-0.5 rounded bg-purple-950/70 border border-purple-900/60 text-purple-200 font-mono flex items-center gap-1">
-                          <i class="fa-solid fa-flag text-[9px] text-purple-400"></i> ${evt}
-                        </span>
-                      `).join('')}
-                    </div>
-                  </div>
-                ` : ''}
+            <a href="javascript:void(0)" onclick="openProject('SeiyuuData')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#38bdf8]">
+                <i class="fa-solid fa-microphone-lines"></i>
               </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">SeiyuuData</div>
+                <div class="text-[11px] text-slate-400">Voice actor knowledge base</div>
+              </div>
+            </a>
 
-      const modal = document.getElementById('entryDetailModal');
+            <a href="javascript:void(0)" onclick="openProject('SakugaWiki')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#fb923c]">
+                <i class="fa-solid fa-layer-group"></i>
+              </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">SakugaWiki</div>
+                <div class="text-[11px] text-slate-400">Key animator cuts & timing</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="openProject('StudioGraph')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#a78bfa]">
+                <i class="fa-solid fa-building"></i>
+              </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">StudioGraph</div>
+                <div class="text-[11px] text-slate-400">Lineage of animation houses</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="openProject('WebTracker')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#2dd4bf]">
+                <i class="fa-solid fa-network-wired"></i>
+              </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">WebTracker</div>
+                <div class="text-[11px] text-slate-400">Community platforms & hubs</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="space-y-4">
+            <a href="javascript:void(0)" onclick="openProject('AniTimeline')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#e879f9]">
+                <i class="fa-solid fa-timeline"></i>
+              </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">AniTimeline</div>
+                <div class="text-[11px] text-slate-400">Chronological epoch records</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="openProject('EventDex')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#facc15]">
+                <i class="fa-solid fa-calendar-days"></i>
+              </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">EventDex</div>
+                <div class="text-[11px] text-slate-400">Convention & expo registry</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="openProject('SoundtrackVault')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#f87171]">
+                <i class="fa-solid fa-music"></i>
+              </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">SoundVault</div>
+                <div class="text-[11px] text-slate-400">OP, ED, and OST catalogs</div>
+              </div>
+            </a>
+
+            <a href="javascript:void(0)" onclick="openProject('MetaOtaku')" class="sister-link flex items-center gap-3">
+              <div class="w-8 h-8 rounded bg-[#10141d] border border-slate-800 flex items-center justify-center text-[#94a3b8]">
+                <i class="fa-solid fa-compass"></i>
+              </div>
+              <div>
+                <div class="sister-title text-slate-200 font-semibold text-xs">Meta-AniPedia</div>
+                <div class="text-[11px] text-slate-400">Archivist coordination</div>
+              </div>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="border-t border-slate-800/80 pt-6 text-center text-slate-500 text-[11px]">
+        <p>This portal is available under the Creative Commons Attribution-ShareAlike License • Terms of Use • Privacy Policy</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <div id="noticeModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-[#121620] border border-slate-800 rounded-xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
+      <div id="noticeIcon" class="w-12 h-12 rounded-full bg-[#1b2230] text-[#629cf8] mx-auto flex items-center justify-center text-xl">
+        <i class="fa-solid fa-book-bookmark"></i>
+      </div>
+      <div>
+        <h3 id="noticeTitle" class="text-lg font-bold text-white font-serif">Category Section</h3>
+        <p id="noticeDesc" class="text-xs text-slate-300 mt-2 leading-relaxed">
+          Loading catalog section...
+        </p>
+      </div>
+      <button onclick="closeNoticeModal()" class="w-full py-2 bg-[#3673e8] hover:bg-[#245ed0] text-white text-xs font-semibold rounded transition-colors">
+        Enter Archive
+      </button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('imageUploader').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          document.getElementById('centerVisual').src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function selectCategory(categoryName) {
+      document.getElementById('categorySelector').value = categoryName;
+      document.getElementById('noticeTitle').textContent = categoryName + " Archive";
+      document.getElementById('noticeDesc').textContent = "Ready to explore the " + categoryName + " repository containing hand-curated character entries, episode chronologies, and historical metadata.";
+      
+      const modal = document.getElementById('noticeModal');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
     }
 
-    function closeEntryModal() {
-      const modal = document.getElementById('entryDetailModal');
+    function openProject(projectName) {
+      document.getElementById('noticeTitle').textContent = projectName;
+      document.getElementById('noticeDesc').textContent = "Connecting to " + projectName + " sister project database.";
+      const modal = document.getElementById('noticeModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeNoticeModal() {
+      const modal = document.getElementById('noticeModal');
       modal.classList.add('hidden');
       modal.classList.remove('flex');
     }
 
-    function openRandomEntry() {
-      const available = ANIPEDIA_DATA.filter(item => !item.isAdult || nsfwEnabled);
-      if (available.length === 0) return;
-      const random = available[Math.floor(Math.random() * available.length)];
-      openEntryDetail(random.id);
+    function executeSearch(e) {
+      e.preventDefault();
+      const query = document.getElementById('wikiSearchInput').value.trim();
+      const category = document.getElementById('categorySelector').value;
+      
+      document.getElementById('noticeTitle').textContent = 'Search: "' + (query || 'All Entries') + '"';
+      document.getElementById('noticeDesc').textContent = 'Filtering records in category [' + category + ']. In your project ledger, this will pull the matching episode synopses and character profiles.';
+      
+      const modal = document.getElementById('noticeModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
     }
 
-    // ================= LIVE SEARCH LOGIC =================
-    function setupSearchListeners() {
-      const input = document.getElementById('globalSearchInput');
-      const mobileInput = document.getElementById('mobileSearchInput');
-      const dropdown = document.getElementById('searchDropdown');
-      const list = document.getElementById('searchResultsList');
+    function togglePortalLanguages() {
+      const drawer = document.getElementById('languageDrawer');
+      drawer.classList.toggle('hidden');
+    }
 
-      function handleSearch(val) {
-        searchQuery = val.toLowerCase().trim();
-        renderCatalog();
+    function switchLang(lang) {
+      document.getElementById('wikiSearchInput').placeholder = 'Search AniPedia (' + lang + ')...';
+      togglePortalLanguages();
+    }
 
-        if (searchQuery.length === 0) {
-          dropdown.classList.add('hidden');
-          return;
-        }
-
-        const matches = ANIPEDIA_DATA.filter(i => {
-          if (i.isAdult && !nsfwEnabled) return false;
-          return i.title.toLowerCase().includes(searchQuery) ||
-                 i.summary.toLowerCase().includes(searchQuery) ||
-                 i.tags.some(t => t.toLowerCase().includes(searchQuery)) ||
-                 i.characters.some(c => c.name.toLowerCase().includes(searchQuery));
-        });
-
-        list.innerHTML = '';
-        if (matches.length === 0) {
-          list.innerHTML = `<div class="p-4 text-xs text-slate-400 text-center">No encyclopedia entries found for "${val}"</div>`;
-        } else {
-          matches.forEach(item => {
-            const itemRow = document.createElement('div');
-            itemRow.className = "p-3 hover:bg-slate-800/80 cursor-pointer flex items-center justify-between text-xs transition-colors";
-            itemRow.onclick = () => {
-              dropdown.classList.add('hidden');
-              input.value = '';
-              openEntryDetail(item.id);
-            };
-            itemRow.innerHTML = `
-              <div>
-                <span class="font-bold text-white block">${item.title}</span>
-                <span class="text-[10px] text-slate-400 font-mono">${item.format} • ${item.releaseYear}</span>
-              </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">
-                Inspect
-              </span>
-            `;
-            list.appendChild(itemRow);
-          });
-        }
-        dropdown.classList.remove('hidden');
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeNoticeModal();
       }
-
-      input.addEventListener('input', (e) => handleSearch(e.target.value));
-      mobileInput.addEventListener('input', (e) => handleSearch(e.target.value));
-
-      // Global hotkey Ctrl+K to focus search
-      window.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-          e.preventDefault();
-          input.focus();
-        }
-        if (e.key === 'Escape') {
-          dropdown.classList.add('hidden');
-          closeEntryModal();
-          cancelAgeGate();
-          closeEditorNoticeModal();
-        }
-      });
-
-      // Close search when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
-          dropdown.classList.add('hidden');
-        }
-      });
-    }
-
-    // ================= MODAL HELPERS =================
-    function openEditorNoticeModal() {
-      document.getElementById('contributeModal').classList.remove('hidden');
-      document.getElementById('contributeModal').classList.add('flex');
-    }
-
-    function closeEditorNoticeModal() {
-      document.getElementById('contributeModal').classList.add('hidden');
-      document.getElementById('contributeModal').classList.remove('flex');
-    }
-
-    function openDisclaimerModal() {
-      alert("AniPedia Content Advisory:\n\nAll summaries, episode chronologies, and character analyses are manually drafted for archival reference. The 18+ Vault is strictly partitioned and requires confirmation.");
-    }
+    });
   </script>
 </body>
 </html>
