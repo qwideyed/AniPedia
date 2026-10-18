@@ -56,6 +56,12 @@
       color: #629cf8;
       text-decoration: underline;
     }
+    .social-btn {
+      transition: all 0.2s ease;
+    }
+    .social-btn:hover {
+      transform: translateY(-1.5px);
+    }
     .center-orb-wrapper {
       position: relative;
       width: 100%;
@@ -71,7 +77,36 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-[#3673e8] selection:text-white">
 
-  <main class="w-full max-w-5xl mx-auto px-4 pt-8 pb-12 flex flex-col items-center flex-grow">
+  <nav class="w-full px-4 sm:px-8 pt-4 pb-2 flex items-center justify-end z-20">
+    <div class="flex items-center gap-2 sm:gap-3 bg-[#111622]/80 border border-slate-800/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg">
+      <div class="flex items-center gap-1 sm:gap-1.5">
+        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-btn w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-[#ff0000] hover:bg-[#1a2130]" title="YouTube">
+          <i class="fa-brands fa-youtube text-sm"></i>
+        </a>
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-btn w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#1a2130]" title="X (Twitter)">
+          <i class="fa-brands fa-x-twitter text-sm"></i>
+        </a>
+        <a href="https://reddit.com" target="_blank" rel="noopener noreferrer" class="social-btn w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-[#ff4500] hover:bg-[#1a2130]" title="Reddit">
+          <i class="fa-brands fa-reddit-alien text-sm"></i>
+        </a>
+        <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="social-btn w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-[#5865f2] hover:bg-[#1a2130]" title="Discord">
+          <i class="fa-brands fa-discord text-sm"></i>
+        </a>
+        <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="social-btn w-8 h-8 rounded-full flex items-center justify-center text-slate-400 hover:text-[#00f2fe] hover:bg-[#1a2130]" title="TikTok">
+          <i class="fa-brands fa-tiktok text-sm"></i>
+        </a>
+      </div>
+
+      <div class="h-4 w-px bg-slate-700/80"></div>
+
+      <a href="anime.html" class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium text-slate-200 bg-[#1e2738] hover:bg-[#253248] hover:text-white border border-slate-700/80 transition-all hover:border-[#629cf8]/60 shadow-sm">
+        <i class="fa-solid fa-heart text-[#f43f5e] text-[11px]"></i>
+        <span>Donate</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="w-full max-w-5xl mx-auto px-4 pt-2 pb-12 flex flex-col items-center flex-grow">
     
     <header class="text-center mb-6 sm:mb-8">
       <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white wiki-title">
