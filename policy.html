@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AniPedia:Policies, Guidelines and Legal Terms — AniPedia</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Linux+Libertine:ital,wght@0,400;0,700;1,400&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --wiki-bg: #0b0e13;
+      --wiki-surface: #10151d;
+      --wiki-surface-sub: #161e29;
+      --wiki-border: #1b2636;
+      --wiki-border-soft: #233144;
+      --wiki-text: #e1e7ec;
+      --wiki-muted: #9aa7b5;
+      --wiki-link: #6ba3ff;
+      --wiki-link-hover: #93c5fd;
+    }
+    body {
+      background-color: var(--wiki-bg);
+      color: var(--wiki-text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.7;
+    }
+    .wiki-serif {
+      font-family: 'Linux Libertine', 'Noto Serif', Georgia, serif;
+    }
+    .wiki-link {
+      color: var(--wiki-link);
+      text-decoration: none;
+    }
+    .wiki-link:hover {
+      color: var(--wiki-link-hover);
+      text-decoration: underline;
+    }
+    .ambox {
+      border-left: 4px solid #2563eb;
+      background: #111722;
+      border: 1px solid #1c2738;
+      border-left-width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #253347;
+      border-radius: 3px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .toc-item.active {
+      color: #93c5fd;
+      font-weight: 600;
+      border-left-color: #3b82f6;
+      background: rgba(37, 99, 235, 0.08);
+    }
+    .policy-clause {
+      scroll-margin-top: 5rem;
+    }
+    mark.highlight {
+      background-color: #facc15;
+      color: #0b0e13;
+      padding: 0.1em 0.25em;
+      border-radius: 2px;
+    }
+    @media print {
+      header, footer, #tocSidebar, #backToTopBtn, #searchBarRow, #tabsRow {
+        display: none !important;
+      }
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      main {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .wiki-link {
+        color: #000000 !important;
+        text-decoration: underline !important;
+      }
+      .ambox {
+        border-color: #666666 !important;
+        background: #f4f4f4 !important;
+        color: #000000 !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-[#2563eb] selection:text-white">
+
+  <header class="sticky top-0 z-50 bg-[#0c1017]/95 border-b border-[#1b2636] backdrop-blur-md">
+    <div class="max-w-[1920px] mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-3">
+      
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="toggleSidebarMobile()" class="lg:hidden w-9 h-9 rounded-lg border border-[#1f2c3f] bg-[#121820] flex items-center justify-center text-slate-300 hover:text-white">
+          <i class="fa-solid fa-bars text-sm"></i>
+        </button>
+
+        <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group flex-shrink-0">
+          <div class="w-9 h-9 rounded-full border border-slate-700/80 overflow-hidden bg-[#161c26] flex items-center justify-center flex-shrink-0 shadow-md">
+            <img src="favicon.png" alt="AniPedia" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/161c26/d8dde6?text=AP';">
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="wiki-serif font-bold text-lg sm:text-xl tracking-wide text-white group-hover:text-[#60a5fa] transition-colors leading-none">ANIPEDIA</span>
+              <span class="text-[10px] bg-[#2563eb]/20 text-[#93c5fd] border border-[#2563eb]/40 font-sans px-1.5 py-0.5 rounded uppercase font-semibold tracking-wider">Policy</span>
+            </div>
+            <span class="text-[10px] text-slate-400 font-sans tracking-tight hidden sm:inline">The Free Otaku Encyclopedia</span>
+          </div>
+        </a>
+      </div>
+
+      <div class="flex-1 max-w-xl mx-2 hidden md:block">
+        <form onsubmit="handleHeaderSearch(event)" class="relative flex items-center h-9">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 text-slate-400 text-xs pointer-events-none"></i>
+          <input 
+            type="text" 
+            id="headerSearchInput" 
+            placeholder="Search AniPedia archives, voice cast, titles..." 
+            autocomplete="off"
+            class="w-full h-full bg-[#121822] border border-[#1f2c3f] rounded-lg pl-8 pr-3 text-xs text-slate-100 placeholder-slate-400 focus:outline-none focus:border-[#3b82f6]"
+          />
+        </form>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+        <nav class="hidden lg:flex items-center gap-1 text-xs">
+          <a href="index.html" class="px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-[#16202e] transition-colors">Portal</a>
+          <a href="anime.html" class="px-2.5 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-[#16202e] transition-colors">Anime Directory</a>
+          <a href="policy.html" class="px-2.5 py-1.5 rounded-lg text-[#93c5fd] bg-[#1a2537] font-semibold border border-[#26374f]">Policies</a>
+        </nav>
+
+        <div class="h-4 w-px bg-slate-800 hidden lg:block"></div>
+
+        <div class="hidden sm:flex items-center gap-1 bg-[#121820] border border-[#1b2636] px-2 py-1 rounded-full">
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-[#ff0000] hover:bg-[#1b2636] transition-colors" title="YouTube">
+            <i class="fa-brands fa-youtube text-xs"></i>
+          </a>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#1b2636] transition-colors" title="X (Twitter)">
+            <i class="fa-brands fa-x-twitter text-xs"></i>
+          </a>
+          <a href="https://reddit.com" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-[#ff4500] hover:bg-[#1b2636] transition-colors" title="Reddit">
+            <i class="fa-brands fa-reddit-alien text-xs"></i>
+          </a>
+          <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-[#5865f2] hover:bg-[#1b2636] transition-colors" title="Discord">
+            <i class="fa-brands fa-discord text-xs"></i>
+          </a>
+          <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-400 hover:text-[#00f2fe] hover:bg-[#1b2636] transition-colors" title="TikTok">
+            <i class="fa-brands fa-tiktok text-xs"></i>
+          </a>
+        </div>
+
+        <a href="donate.html" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#2563eb] hover:bg-[#1d4ed8] shadow-sm transition-colors">
+          <i class="fa-solid fa-heart text-[#f43f5e] text-[11px]"></i>
+          <span class="hidden sm:inline">Donate</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <div class="max-w-[1920px] w-full mx-auto px-3 sm:px-6 py-4 flex-grow flex gap-6">
+    
+    <aside id="tocSidebar" class="w-64 flex-shrink-0 hidden lg:block sticky top-20 self-start max-h-[calc(100vh-6rem)] overflow-y-auto custom-scroll pr-2 text-xs">
+      <div class="bg-[#10151d] border border-[#1b2636] rounded-xl p-3.5 shadow-md">
+        <div class="flex items-center justify-between pb-2 mb-2 border-b border-[#1b2636]">
+          <span class="font-bold uppercase tracking-wider text-[11px] text-slate-400 flex items-center gap-2">
+            <i class="fa-solid fa-list-ul text-[#6ba3ff]"></i>
+            <span>Contents</span>
+          </span>
+          <button type="button" onclick="collapseAllSections()" class="text-[10px] text-[#6ba3ff] hover:underline">Top</button>
+        </div>
+
+        <nav class="space-y-0.5">
+          <a href="#section-npov" class="toc-item block py-1.5 px-2.5 rounded border-l-2 border-transparent text-slate-300 hover:text-white hover:bg-[#16202e] transition-colors">
+            1. Core Archival Mission & NPOV
+          </a>
+          <a href="#section-verification" class="toc-item block py-1.5 px-2.5 rounded border-l-2 border-transparent text-slate-300 hover:text-white hover:bg-[#16202e] transition-colors">
+            2. Manual Entry & Verification
+          </a>
+          <a href="#section-mature" class="toc-item block py-1.5 px-2.5 rounded border-l-2 border-transparent text-slate-300 hover:text-white hover:bg-[#16202e] transition-colors">
+            3. Mature & 18+ Vault Regulations
+          </a>
+          <a href="#section-copyright" class="toc-item block py-1.5 px-2.5 rounded border-l-2 border-transparent text-slate-300 hover:text-white hover:bg-[#16202e] transition-colors">
+            4. Copyright, Fair Use & DMCA
+          </a>
+          <a href="#section-privacy" class="toc-item block py-1.5 px-2.5 rounded border-l-2 border-transparent text-slate-300 hover:text-white hover:bg-[#16202e] transition-colors">
+            5. User Privacy & Local Storage
+          </a>
+          <a href="#section-licensing" class="toc-item block py-1.5 px-2.5 rounded border-l-2 border-transparent text-slate-300 hover:text-white hover:bg-[#16202e] transition-colors">
+            6. Creative Commons (CC BY-SA 4.0)
+          </a>
+          <a href="#section-community" class="toc-item block py-1.5 px-2.5 rounded border-l-2 border-transparent text-slate-300 hover:text-white hover:bg-[#16202e] transition-colors">
+            7. Community Conduct & Disclaimer
+          </a>
+          <a href="#section-contact" class="toc-item block py-1.5 px-2.5 rounded border-l-2 border-transparent text-slate-300 hover:text-white hover:bg-[#16202e] transition-colors">
+            8. Amendments & Contact Details
+          </a>
+        </nav>
+
+        <div class="mt-4 pt-3 border-t border-[#1b2636] text-[11px] text-slate-400 space-y-2">
+          <div class="flex items-center gap-1.5">
+            <i class="fa-solid fa-stamp text-amber-400 text-[10px]"></i>
+            <span>Policy Status: <strong>Binding</strong></span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <i class="fa-solid fa-fingerprint text-[#6ba3ff] text-[10px]"></i>
+            <span>Doc ID: POL-2026-V1</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="flex-1 min-w-0 max-w-5xl">
+      
+      <div id="tabsRow" class="flex items-center justify-between border-b border-[#1b2636] pb-2 mb-4 text-xs">
+        <div class="flex items-center gap-1">
+          <span class="px-3 py-1.5 rounded-t font-semibold text-white bg-[#10151d] border-t-2 border-[#2563eb]">Article</span>
+          <a href="#section-contact" class="px-3 py-1.5 rounded-t text-slate-400 hover:text-white hover:bg-[#121822] transition-colors">Discussion</a>
+        </div>
+
+        <div class="flex items-center gap-1">
+          <span class="px-2.5 py-1 text-slate-200 font-medium">Read</span>
+          <button type="button" onclick="showSourceModal()" class="px-2.5 py-1 text-slate-400 hover:text-white hover:bg-[#121822] rounded transition-colors">View Source</button>
+          <button type="button" onclick="showHistoryToast()" class="px-2.5 py-1 text-slate-400 hover:text-white hover:bg-[#121822] rounded transition-colors">History</button>
+          <button type="button" onclick="toggleWatchlist(this)" class="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-amber-400 rounded transition-colors" title="Add to watchlist">
+            <i class="fa-regular fa-star text-xs"></i>
+          </button>
+          <button type="button" onclick="window.print()" class="px-2.5 py-1 text-slate-400 hover:text-white hover:bg-[#121822] rounded transition-colors flex items-center gap-1.5" title="Print Archive Sheet">
+            <i class="fa-solid fa-print text-[11px]"></i>
+            <span class="hidden sm:inline">Print</span>
+          </button>
+        </div>
+      </div>
+
+      <header class="pb-3 border-b border-[#1b2636] mb-5">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-normal text-white wiki-serif tracking-tight">
+          AniPedia: Policies, Guidelines and Legal Terms
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+          Official compendium of archival standards, privacy, mature content governance, and licensing agreements.
+        </p>
+        <div class="text-[11px] text-slate-500 mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span>Last edited on October 18, 2026</span>
+          <span>•</span>
+          <span>Effective Date: October 2026</span>
+          <span>•</span>
+          <span>Document ID: POL-2026-V1</span>
+          <span>•</span>
+          <span class="text-[#6ba3ff]">Permanent URL: anipedia.org/wiki/AniPedia:Policy</span>
+        </div>
+      </header>
+
+      <div class="ambox p-4 rounded-xl mb-6 flex items-start gap-3.5 shadow-sm text-xs">
+        <div class="w-8 h-8 rounded-lg bg-[#182335] text-[#6ba3ff] flex items-center justify-center flex-shrink-0 mt-0.5 border border-[#233550]">
+          <i class="fa-solid fa-scale-balanced text-sm"></i>
+        </div>
+        <div class="space-y-1 text-slate-300">
+          <div class="font-bold text-white text-xs sm:text-sm">Binding Administrative Policy & Community Standard</div>
+          <p class="leading-relaxed">
+            This document outlines the core administrative policies and binding terms of AniPedia. Adherence is mandatory for editors, contributors, and users browsing mature and public catalog archives. Edits that contravene these guidelines are subject to immediate rollback and reviewer sanction.
+          </p>
+        </div>
+      </div>
+
+      <div id="searchBarRow" class="mb-6 bg-[#10151d] border border-[#1b2636] rounded-xl p-3 flex flex-col sm:flex-row items-center gap-2 text-xs">
+        <div class="relative w-full flex items-center">
+          <i class="fa-solid fa-filter absolute left-3 text-slate-400 text-xs pointer-events-none"></i>
+          <input 
+            type="text" 
+            id="policySearchInput" 
+            placeholder="Filter within policy clauses (e.g., 'DMCA', 'NSFW', 'Voice Actor', 'CC BY-SA')..." 
+            oninput="filterPolicyText(this.value)"
+            class="w-full bg-[#141b26] border border-[#202e42] rounded-lg pl-8 pr-8 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-[#3b82f6]"
+          />
+          <button type="button" onclick="clearPolicySearch()" id="clearPolicySearchBtn" class="hidden absolute right-2.5 text-slate-400 hover:text-white">
+            <i class="fa-solid fa-xmark text-xs"></i>
+          </button>
+        </div>
+        <div class="text-[11px] text-slate-400 whitespace-nowrap pl-1" id="policyFilterStatus">
+          Viewing 8 of 8 Articles
+        </div>
+      </div>
+
+      <article id="policyArticleBody" class="space-y-10 text-xs sm:text-sm text-slate-300 leading-relaxed">
+        
+        <section id="section-npov" class="policy-clause bg-[#10151d] border border-[#1b2636] rounded-xl p-5 sm:p-7 space-y-3.5 shadow-sm">
+          <div class="flex items-center justify-between pb-2 border-b border-[#1b2636]">
+            <h2 class="text-base sm:text-lg font-bold text-white wiki-serif flex items-center gap-2">
+              <span class="font-mono text-[#6ba3ff] text-xs font-normal">§ 1.0</span>
+              <span>Archival Mission & Neutral Point of View (NPOV)</span>
+            </h2>
+            <a href="#section-npov" class="text-slate-500 hover:text-slate-300 text-xs font-mono">#1.0</a>
+          </div>
+
+          <p>
+            AniPedia operates as a free, decentralized, and uncompromised encyclopedia dedicated to chronicling television anime, theatrical features, independent global animations, serialized manga, visual novels, voice artists (*seiyū* and international dub casts), and historic production studios.
+          </p>
+          <p>
+            All encyclopedic records must be authored from a strict <strong>Neutral Point of View (NPOV)</strong>. Articles, episode logs, and production records must present historical, thematic, and biographical facts without editorial bias, commercial hype, fandom polarization, or defamatory critique. Subjective qualities (such as visual pacing or public reception) must be framed strictly within attributed secondary reporting from verified industry publications, festival acknowledgements, or authenticated sales records.
+          </p>
+          <div class="bg-[#0b0e13] border border-[#1c2738] rounded-lg p-3 text-xs text-slate-300 space-y-1">
+            <div class="font-semibold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-check text-emerald-400"></i>
+              <span>Core Operational Directive:</span>
+            </div>
+            <p>
+              AniPedia rejects arbitrary canon censorship, corporate promotional prioritization, and algorithmic bias. The catalog treats a 1963 black-and-white broadcast with identical archival gravity to a modern broadcast phenomenon.
+            </p>
+          </div>
+        </section>
+
+        <section id="section-verification" class="policy-clause bg-[#10151d] border border-[#1b2636] rounded-xl p-5 sm:p-7 space-y-3.5 shadow-sm">
+          <div class="flex items-center justify-between pb-2 border-b border-[#1b2636]">
+            <h2 class="text-base sm:text-lg font-bold text-white wiki-serif flex items-center gap-2">
+              <span class="font-mono text-[#6ba3ff] text-xs font-normal">§ 2.0</span>
+              <span>Manual Data Entry & Verification Standards</span>
+            </h2>
+            <a href="#section-verification" class="text-slate-500 hover:text-slate-300 text-xs font-mono">#2.0</a>
+          </div>
+
+          <p>
+            Unlike automated database scrapers, AniPedia prioritizes deliberate, human-authored archival chronologies. Contributors logging series metadata, individual episode play-by-plays, and chapter breakdowns must conform to verified attribution protocols.
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-slate-300">
+            <li>
+              <strong>Episode-by-Episode Synopses:</strong> Episode recaps must provide accurate, scene-accurate chronological narrative benchmarks. Fan theories, unverified leaks, and speculative future plot arcs are strictly prohibited in canonical episode bodies.
+            </li>
+            <li>
+              <strong>Air Date Chronology:</strong> Original broadcast premiere dates must follow Japanese Standard Time (JST) for domestic television releases, accompanied by regional streaming debut timestamps where dual broadcasts occurred.
+            </li>
+            <li>
+              <strong>Voice Cast Attribution:</strong> Character records must distinguish original Japanese voice actors (*seiyū*) from licensed international dub performers (English, Spanish, French, German, Portuguese, etc.). Reprised or alternate OVA/game voice credits must cite specific production releases.
+            </li>
+            <li>
+              <strong>Verification Hierarchy:</strong> Priority of proof follows: (1) Official broadcast end credits, (2) Publisher tankōbon releases and official studio artbooks, (3) Credited industry interviews, and (4) Reputable trade registries (such as the Japan Media Arts Database).
+            </li>
+          </ul>
+        </section>
+
+        <section id="section-mature" class="policy-clause bg-[#10151d] border border-[#1b2636] rounded-xl p-5 sm:p-7 space-y-3.5 shadow-sm">
+          <div class="flex items-center justify-between pb-2 border-b border-[#1b2636]">
+            <h2 class="text-base sm:text-lg font-bold text-white wiki-serif flex items-center gap-2">
+              <span class="font-mono text-[#6ba3ff] text-xs font-normal">§ 3.0</span>
+              <span>Mature Content & 18+ (Hentai / Ecchi) Vault Regulations</span>
+            </h2>
+            <a href="#section-mature" class="text-slate-500 hover:text-slate-300 text-xs font-mono">#3.0</a>
+          </div>
+
+          <p>
+            AniPedia recognizes that adult animation, erotic manga (*hentai*, *doujinshi*), and mature theatrical works hold significant subcultural and historical lineage in the broader development of modern animation techniques. Such materials are cataloged under rigorous safeguarding guidelines.
+          </p>
+          <div class="space-y-2">
+            <div class="bg-[#17131b] border border-pink-950/70 p-3.5 rounded-lg text-xs space-y-1.5">
+              <div class="text-pink-400 font-bold flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Strict Separation and Opt-In Access</span>
+              </div>
+              <p class="text-slate-300">
+                All 18+ adult animated entries, erotic OVA logs, and mature visual novel adaptations are strictly sequestered behind the AniPedia 18+ Vault. Adult entries do not surface in the default Safe-For-Work index, open home carousels, or public RSS feeds without authenticated client-side opt-in confirmation.
+              </p>
+            </div>
+            <ul class="list-disc pl-5 space-y-2 text-slate-300">
+              <li>
+                <strong>Strict Statutory Compliance:</strong> AniPedia enforces a zero-tolerance policy against any visual, textual, or suggested depiction of non-consensual exploitation or underage real-world harm. All fictional portrayals must comply fully with international host jurisdictions and the Protect Our Children Act.
+              </li>
+              <li>
+                <strong>Archival Framing Only:</strong> Adult entries are cataloged exclusively through production metadata: studio circle, scenario writer, release epoch, pseudonymous voice credits, and objective synopsis. Graphic explicit previews or unrated video streams are neither hosted nor promoted.
+              </li>
+              <li>
+                <strong>Age Verification Requirement:</strong> Users accessing mature vault articles must have confirmed they are at least 18 years of age (or the legal age of majority in their applicable jurisdiction).
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="section-copyright" class="policy-clause bg-[#10151d] border border-[#1b2636] rounded-xl p-5 sm:p-7 space-y-3.5 shadow-sm">
+          <div class="flex items-center justify-between pb-2 border-b border-[#1b2636]">
+            <h2 class="text-base sm:text-lg font-bold text-white wiki-serif flex items-center gap-2">
+              <span class="font-mono text-[#6ba3ff] text-xs font-normal">§ 4.0</span>
+              <span>Copyright, Fair Use & DMCA Takedown Procedures</span>
+            </h2>
+            <a href="#section-copyright" class="text-slate-500 hover:text-slate-300 text-xs font-mono">#4.0</a>
+          </div>
+
+          <p>
+            AniPedia is a non-profit educational and historical reference compendium. We respect the intellectual property rights of animation studios, mangaka, distributors, and creators.
+          </p>
+          <p>
+            <strong>Fair Use Declaration:</strong> Visual media displayed across catalog cards, character profiles, and production infoboxes—including low-resolution title key visuals, book cover art, character reference portraits, and illustrative screenshots—are reproduced under the <strong>Fair Use</strong> doctrine of the United States Copyright Act (17 U.S. Code § 107) for non-commercial educational analysis, historical chronicle, critical review, and scholarship.
+          </p>
+          <div class="bg-[#0b0e13] border border-[#1c2738] rounded-xl p-4 text-xs space-y-2">
+            <div class="font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-file-shield text-[#6ba3ff]"></i>
+              <span>DMCA Agent Notice & Designated Takedown Procedure</span>
+            </div>
+            <p class="text-slate-300">
+              Copyright owners or designated agents requesting removal of media assets must transmit a formal notification pursuant to 17 U.S.C. § 512(c)(3) containing:
+            </p>
+            <ol class="list-decimal pl-5 space-y-1 text-slate-300 font-mono text-[11px]">
+              <li>Physical or electronic signature of the authorized copyright holder.</li>
+              <li>Identification of the copyrighted work claimed to have been infringed.</li>
+              <li>Exact URL(s) on AniPedia where the alleged infringing asset is located.</li>
+              <li>Sufficient contact info: full name, address, telephone number, and email.</li>
+              <li>A good-faith statement that use is not authorized by the copyright owner.</li>
+              <li>A penalty of perjury statement affirming the notice accuracy.</li>
+            </ol>
+            <p class="pt-1">
+              Send formal notifications to: <a href="mailto:dmca@anipedia.org" class="wiki-link font-mono">dmca@anipedia.org</a>. Valid requests are reviewed and processed within 48 to 72 business hours.
+            </p>
+          </div>
+        </section>
+
+        <section id="section-privacy" class="policy-clause bg-[#10151d] border border-[#1b2636] rounded-xl p-5 sm:p-7 space-y-3.5 shadow-sm">
+          <div class="flex items-center justify-between pb-2 border-b border-[#1b2636]">
+            <h2 class="text-base sm:text-lg font-bold text-white wiki-serif flex items-center gap-2">
+              <span class="font-mono text-[#6ba3ff] text-xs font-normal">§ 5.0</span>
+              <span>User Privacy & Local Storage Data Policy</span>
+            </h2>
+            <a href="#section-privacy" class="text-slate-500 hover:text-slate-300 text-xs font-mono">#5.0</a>
+          </div>
+
+          <p>
+            AniPedia is built on an unyielding zero-tracking commitment. We believe privacy is fundamental to open research and knowledge preservation.
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-slate-300">
+            <li>
+              <strong>No Third-Party Advertising or Tracking Pixels:</strong> AniPedia does not embed telemetry beacons, cross-site surveillance cookies, fingerprinting scripts, or third-party ad network tags.
+            </li>
+            <li>
+              <strong>Client-Side State Storage:</strong> Preferences such as dark mode toggles, filter combinations, reading history, and mature vault confirmations are stored exclusively in your browser's client-side <code>localStorage</code>. This data never leaves your device and can be cleared at any time through your browser settings.
+            </li>
+            <li>
+              <strong>Server Access Logs:</strong> Standard HTTP server logs (IP address, user agent, requested URI) are held in ephemeral memory for temporary denial-of-service mitigation and security diagnostics, after which logs are routinely scrubbed.
+            </li>
+          </ul>
+        </section>
+
+        <section id="section-licensing" class="policy-clause bg-[#10151d] border border-[#1b2636] rounded-xl p-5 sm:p-7 space-y-3.5 shadow-sm">
+          <div class="flex items-center justify-between pb-2 border-b border-[#1b2636]">
+            <h2 class="text-base sm:text-lg font-bold text-white wiki-serif flex items-center gap-2">
+              <span class="font-mono text-[#6ba3ff] text-xs font-normal">§ 6.0</span>
+              <span>Creative Commons Attribution Licensing</span>
+            </h2>
+            <a href="#section-licensing" class="text-slate-500 hover:text-slate-300 text-xs font-mono">#6.0</a>
+          </div>
+
+          <p>
+            Unless explicitly noted otherwise, all original prose, written episode chronologies, character summaries, and compiled structural datasets authored for AniPedia are licensed under the <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer" class="wiki-link font-semibold">Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)</a>.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="bg-[#0b0e13] border border-[#1c2738] p-3 rounded-lg space-y-1">
+              <div class="font-bold text-white flex items-center gap-1.5">
+                <i class="fa-brands fa-creative-commons text-lg text-emerald-400"></i>
+                <span>You Are Free To:</span>
+              </div>
+              <p class="text-slate-400">
+                Share, copy, and redistribute text content in any medium or format, and adapt or remix material for non-commercial or commercial purposes, provided you credit AniPedia.
+              </p>
+            </div>
+            <div class="bg-[#0b0e13] border border-[#1c2738] p-3 rounded-lg space-y-1">
+              <div class="font-bold text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-arrows-rotate text-lg text-[#6ba3ff]"></i>
+                <span>Under the Terms of:</span>
+              </div>
+              <p class="text-slate-400">
+                Attribution (credit AniPedia with link to entry) and ShareAlike (if you alter or build upon the work, you must distribute under the identical or compatible license).
+              </p>
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-400 italic">
+            Note: Trademarked character logos, studio insignias, and copyrighted promotional artwork remain the sole property of their respective creators and are excluded from the CC BY-SA 4.0 grant.
+          </p>
+        </section>
+
+        <section id="section-community" class="policy-clause bg-[#10151d] border border-[#1b2636] rounded-xl p-5 sm:p-7 space-y-3.5 shadow-sm">
+          <div class="flex items-center justify-between pb-2 border-b border-[#1b2636]">
+            <h2 class="text-base sm:text-lg font-bold text-white wiki-serif flex items-center gap-2">
+              <span class="font-mono text-[#6ba3ff] text-xs font-normal">§ 7.0</span>
+              <span>Community Conduct & Content Disclaimers</span>
+            </h2>
+            <a href="#section-community" class="text-slate-500 hover:text-slate-300 text-xs font-mono">#7.0</a>
+          </div>
+
+          <p>
+            AniPedia thrives on open collaboration. Contributors, reviewers, and patrons are expected to interact with mutual scholarly respect.
+          </p>
+          <ul class="list-disc pl-5 space-y-2 text-slate-300">
+            <li>
+              <strong>Civility & Anti-Harassment:</strong> Ad-hominem attacks, doxxing, brigading against voice actors or studio teams, and personal disputes on discussion pages are subject to immediate editorial suspension.
+            </li>
+            <li>
+              <strong>Vandalism & Hoaxes:</strong> Falsification of broadcast dates, insertion of manufactured quotes, vandalism of character sexual orientation or voice credits, and fictitious show creation will result in a permanent ban.
+            </li>
+            <li>
+              <strong>Spoiler Policy:</strong> As an exhaustive encyclopedic archive, AniPedia documents narrative works in full, including climaxes, character fates, and series endings. Readers browse with the understanding that unmasked spoilers exist throughout article bodies and episode recaps.
+            </li>
+            <li>
+              <strong>General Disclaimer of Accuracy:</strong> While voluntary curators work diligently to verify all records against primary materials, AniPedia provides its encyclopedia on an "as-is" basis without warranties of completeness or fitness for particular commercial applications.
+            </li>
+          </ul>
+        </section>
+
+        <section id="section-contact" class="policy-clause bg-[#10151d] border border-[#1b2636] rounded-xl p-5 sm:p-7 space-y-3.5 shadow-sm">
+          <div class="flex items-center justify-between pb-2 border-b border-[#1b2636]">
+            <h2 class="text-base sm:text-lg font-bold text-white wiki-serif flex items-center gap-2">
+              <span class="font-mono text-[#6ba3ff] text-xs font-normal">§ 8.0</span>
+              <span>Amendments, Dispute Resolution & Contact Details</span>
+            </h2>
+            <a href="#section-contact" class="text-slate-500 hover:text-slate-300 text-xs font-mono">#8.0</a>
+          </div>
+
+          <p>
+            The AniPedia Preservation Council reserves the right to periodically revise these administrative policies to address evolving digital copyright legislation, community consensus, and archival scope. Material updates are posted to this register with an updated version hash and 14-day notice.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <div class="bg-[#0b0e13] border border-[#1c2738] p-3.5 rounded-lg space-y-1">
+              <div class="text-[11px] uppercase font-bold text-slate-400">General Governance</div>
+              <div class="text-white font-semibold">Archival Council</div>
+              <a href="mailto:council@anipedia.org" class="wiki-link text-xs">council@anipedia.org</a>
+            </div>
+
+            <div class="bg-[#0b0e13] border border-[#1c2738] p-3.5 rounded-lg space-y-1">
+              <div class="text-[11px] uppercase font-bold text-slate-400">Legal & DMCA</div>
+              <div class="text-white font-semibold">Designated Agent</div>
+              <a href="mailto:legal@anipedia.org" class="wiki-link text-xs">legal@anipedia.org</a>
+            </div>
+
+            <div class="bg-[#0b0e13] border border-[#1c2738] p-3.5 rounded-lg space-y-1">
+              <div class="text-[11px] uppercase font-bold text-slate-400">Community Support</div>
+              <div class="text-white font-semibold">Discord Server</div>
+              <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="wiki-link text-xs">discord.gg/anipedia</a>
+            </div>
+          </div>
+        </section>
+
+      </article>
+
+      <div class="mt-8 pt-5 border-t border-[#1b2636] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+        <div>
+          Categories: <a href="anime.html" class="wiki-link">AniPedia Administration</a> • <a href="policy.html" class="wiki-link">Encyclopedic Policies</a> • <a href="policy.html" class="wiki-link">Legal Terms</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="px-3 py-1.5 rounded-lg border border-[#1f2c3f] bg-[#10151d] text-slate-300 hover:text-white hover:border-[#3b82f6] transition-colors flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-up text-[10px]"></i>
+            <span>Back to top</span>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <button 
+    type="button" 
+    id="backToTopBtn" 
+    onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+    class="fixed bottom-6 right-6 z-40 w-10 h-10 rounded-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white shadow-xl flex items-center justify-center transition-all opacity-0 pointer-events-none"
+    title="Back to Top"
+  >
+    <i class="fa-solid fa-arrow-up text-xs"></i>
+  </button>
+
+  <div id="mobileSidebarModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden lg:hidden items-center justify-start p-4">
+    <div class="bg-[#10151d] border border-[#1b2636] w-full max-w-xs rounded-2xl p-4 space-y-3 shadow-2xl max-h-[85vh] overflow-y-auto custom-scroll">
+      <div class="flex items-center justify-between pb-2 border-b border-[#1b2636]">
+        <span class="font-bold text-xs uppercase tracking-wider text-slate-300">Table of Contents</span>
+        <button type="button" onclick="toggleSidebarMobile()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      <nav class="space-y-1 text-xs">
+        <a href="#section-npov" onclick="toggleSidebarMobile()" class="block p-2 rounded text-slate-300 hover:bg-[#16202e] hover:text-white">1. Core Archival Mission & NPOV</a>
+        <a href="#section-verification" onclick="toggleSidebarMobile()" class="block p-2 rounded text-slate-300 hover:bg-[#16202e] hover:text-white">2. Manual Entry & Verification</a>
+        <a href="#section-mature" onclick="toggleSidebarMobile()" class="block p-2 rounded text-slate-300 hover:bg-[#16202e] hover:text-white">3. Mature & 18+ Vault Regulations</a>
+        <a href="#section-copyright" onclick="toggleSidebarMobile()" class="block p-2 rounded text-slate-300 hover:bg-[#16202e] hover:text-white">4. Copyright, Fair Use & DMCA</a>
+        <a href="#section-privacy" onclick="toggleSidebarMobile()" class="block p-2 rounded text-slate-300 hover:bg-[#16202e] hover:text-white">5. User Privacy & Local Storage</a>
+        <a href="#section-licensing" onclick="toggleSidebarMobile()" class="block p-2 rounded text-slate-300 hover:bg-[#16202e] hover:text-white">6. Creative Commons (CC BY-SA 4.0)</a>
+        <a href="#section-community" onclick="toggleSidebarMobile()" class="block p-2 rounded text-slate-300 hover:bg-[#16202e] hover:text-white">7. Community Conduct & Disclaimer</a>
+        <a href="#section-contact" onclick="toggleSidebarMobile()" class="block p-2 rounded text-slate-300 hover:bg-[#16202e] hover:text-white">8. Amendments & Contact Details</a>
+      </nav>
+    </div>
+  </div>
+
+  <div id="sourceModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-[#10151d] border border-[#233145] rounded-2xl max-w-2xl w-full p-5 sm:p-6 space-y-3 shadow-2xl relative">
+      <div class="flex items-center justify-between pb-2 border-b border-[#1b2636]">
+        <h3 class="text-sm font-bold text-white wiki-serif flex items-center gap-2">
+          <i class="fa-solid fa-code text-[#6ba3ff]"></i>
+          <span>Wikitext Source: AniPedia:Policy</span>
+        </h3>
+        <button type="button" onclick="closeSourceModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+      <textarea readonly class="w-full h-64 bg-[#0a0d13] border border-[#1b2636] rounded-lg p-3 text-xs font-mono text-slate-300 custom-scroll select-all focus:outline-none">
+== Archival Mission & Neutral Point of View ==
+{{Policy|binding}}
+AniPedia operates as an independent encyclopedia dedicated to anime, manga, and animation history...
+
+== Mature Content & 18+ Vault Regulations ==
+{{Vault|18+|strict-separation}}
+All adult materials are cataloged under archival parameters and separated via client-side authentication...
+
+== Fair Use & DMCA ==
+Promotional key visuals and screenshots are used under 17 U.S.C. § 107 for non-profit scholarship.
+      </textarea>
+      <div class="flex justify-between items-center text-xs">
+        <span class="text-slate-400">Source view is read-only for public tier users.</span>
+        <button type="button" onclick="closeSourceModal()" class="px-4 py-1.5 rounded-lg bg-[#2563eb] hover:bg-[#1d4ed8] text-white font-medium">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="historyToast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-[#121822] border border-[#2563eb] text-white px-4 py-2 rounded-lg text-xs shadow-2xl hidden items-center gap-2">
+    <i class="fa-solid fa-clock-rotate-left text-[#6ba3ff]"></i>
+    <span id="historyToastText">Revision POL-2026-V1 active. Certified current as of October 2026.</span>
+  </div>
+
+  <footer class="w-full bg-[#080b0f] border-t border-[#1b232e] py-8 text-slate-400 text-xs mt-12">
+    <div class="max-w-[1920px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full border border-slate-700 overflow-hidden flex-shrink-0 bg-[#121820] flex items-center justify-center">
+          <img src="favicon.png" alt="AniPedia" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/80x80/161b24/eaecf0?text=AP';">
+        </div>
+        <div>
+          <span class="text-slate-200 font-semibold wiki-serif">AniPedia Archival Governance</span>
+          <span class="text-slate-500 block text-[11px]">Governed under open non-profit archival principles • Creative Commons BY-SA 4.0</span>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-4 text-xs">
+        <a href="index.html" class="hover:text-white transition-colors">Portal Home</a>
+        <a href="anime.html" class="hover:text-white transition-colors">Anime Directory</a>
+        <a href="donate.html" class="hover:text-white transition-colors">Preservation Fund</a>
+        <a href="policy.html" class="text-[#60a5fa]">Policies & Guidelines</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function handleHeaderSearch(e) {
+      e.preventDefault();
+      const val = document.getElementById('headerSearchInput').value.trim();
+      if (val) {
+        window.location.href = `anime.html?search=${encodeURIComponent(val)}`;
+      } else {
+        window.location.href = 'anime.html';
+      }
+    }
+
+    function toggleSidebarMobile() {
+      const modal = document.getElementById('mobileSidebarModal');
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    }
+
+    function collapseAllSections() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function filterPolicyText(term) {
+      const query = term.toLowerCase().trim();
+      const clauses = document.querySelectorAll('.policy-clause');
+      const clearBtn = document.getElementById('clearPolicySearchBtn');
+      const status = document.getElementById('policyFilterStatus');
+      let visibleCount = 0;
+
+      if (query.length > 0) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+
+      clauses.forEach(clause => {
+        const text = clause.textContent.toLowerCase();
+        if (!query || text.includes(query)) {
+          clause.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          clause.classList.add('hidden');
+        }
+      });
+
+      status.textContent = `Viewing ${visibleCount} of ${clauses.length} Articles`;
+    }
+
+    function clearPolicySearch() {
+      const input = document.getElementById('policySearchInput');
+      input.value = '';
+      filterPolicyText('');
+      input.focus();
+    }
+
+    function showSourceModal() {
+      const modal = document.getElementById('sourceModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeSourceModal() {
+      const modal = document.getElementById('sourceModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function showHistoryToast() {
+      const toast = document.getElementById('historyToast');
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 3000);
+    }
+
+    function toggleWatchlist(btn) {
+      const star = btn.querySelector('i');
+      if (star.classList.contains('fa-regular')) {
+        star.classList.remove('fa-regular');
+        star.classList.add('fa-solid', 'text-amber-400');
+        showToast('Added AniPedia:Policy to your personal watchlist.');
+      } else {
+        star.classList.remove('fa-solid', 'text-amber-400');
+        star.classList.add('fa-regular');
+        showToast('Removed AniPedia:Policy from your watchlist.');
+      }
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('historyToast');
+      const span = document.getElementById('historyToastText');
+      span.textContent = text;
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 2500);
+    }
+
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('backToTopBtn');
+      if (window.scrollY > 300) {
+        btn.classList.remove('opacity-0', 'pointer-events-none');
+        btn.classList.add('opacity-100');
+      } else {
+        btn.classList.add('opacity-0', 'pointer-events-none');
+        btn.classList.remove('opacity-100');
+      }
+
+      const sections = document.querySelectorAll('.policy-clause');
+      const tocLinks = document.querySelectorAll('.toc-item');
+      let currentId = '';
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        if (window.scrollY >= top) {
+          currentId = section.getAttribute('id');
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentId}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeSourceModal();
+        const mobileModal = document.getElementById('mobileSidebarModal');
+        if (!mobileModal.classList.contains('hidden')) {
+          toggleSidebarMobile();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
